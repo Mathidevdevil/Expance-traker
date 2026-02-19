@@ -26,10 +26,13 @@ const Login = () => {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
+        console.log('Login attempt with:', formData);
         try {
-            await login(formData);
+            const data = await login(formData);
+            console.log('Login successful:', data);
             navigate('/');
         } catch (err) {
+            console.error('Login error:', err);
             setError(err);
         } finally {
             setIsLoading(false);

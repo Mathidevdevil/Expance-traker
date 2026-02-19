@@ -1,4 +1,4 @@
-const Income = require('../models/Income');
+const { Income } = require('../utils/store');
 
 // @desc    Get incomes
 // @route   GET /api/incomes
@@ -29,7 +29,8 @@ const getIncomes = async (req, res) => {
             };
         }
 
-        const incomes = await Income.find(query).sort({ date: -1 });
+        const incomeQuery = await Income.find(query);
+        const incomes = incomeQuery.sort({ date: -1 });
 
         res.status(200).json(incomes);
     } catch (error) {

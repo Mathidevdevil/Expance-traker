@@ -1,4 +1,4 @@
-const Expense = require('../models/Expense');
+const { Expense } = require('../utils/store');
 
 // @desc    Get expenses
 // @route   GET /api/expenses
@@ -29,7 +29,16 @@ const getExpenses = async (req, res) => {
             };
         }
 
-        const expenses = await Expense.find(query).sort({ date: -1 });
+        // In store.js Expense.find returns { results, sort }.
+        // We need to call .sort() on it or access results. 
+        // Original: await Expense.find(query).sort({ date: -1 });
+        // Our mock: Expense.find returns object with sort method.
+        // await (await Expense.find(query)).sort(...) 
+        // But Expense.find is async, so await Expense.find(query) returns the obj.
+        // Then .sort(...) returns the sorted array.
+
+        const expenseQuery = await Expense.find(query);
+        const expenses = expenseQuery.sort({ date: -1 });
 
         res.status(200).json(expenses);
     } catch (error) {

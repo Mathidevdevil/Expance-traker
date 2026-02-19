@@ -32,14 +32,17 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (userData) => {
         try {
+            console.log('Sending login request to API...');
             const response = await api.post('/auth/login', userData);
+            console.log('API Response:', response);
             if (response.data) {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 setUser(response.data);
             }
             return response.data;
         } catch (error) {
-            throw error.response.data.message || 'Login failed';
+            console.error('API Error:', error.response?.data || error.message);
+            throw error.response?.data?.message || 'Login failed';
         }
     };
 

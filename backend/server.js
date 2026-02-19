@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cron = require('node-cron');
@@ -24,19 +23,11 @@ app.use('/api/incomes', incomeRoutes);
 app.use('/api/reports', reportRoutes);
 
 app.get('/', (req, res) => {
-    res.send('API is running...');
+    res.send('API is running (In-Memory Mode)...');
 });
 
 // Cron Job
 scheduleMonthlyReport();
-
-// Database Connection
-mongoose.connect(process.env.MONGO_URI, {
-    // useNewUrlParser: true, // Deprecated in newer mongoose
-    // useUnifiedTopology: true, // Deprecated in newer mongoose
-})
-    .then(() => console.log('MongoDB Connected'))
-    .catch((err) => console.log(err));
 
 // Start Server
 const PORT = process.env.PORT || 5000;
