@@ -30,7 +30,10 @@ const Profile = () => {
         try {
             const response = await api.get('/reports/download', {
                 params: { month, year },
-                responseType: 'blob'
+                responseType: 'arraybuffer',
+                headers: {
+                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                }
             });
 
             // Create download link
@@ -110,14 +113,14 @@ const Profile = () => {
                             </div>
                         </div>
                         {isEditing && (
-                            <div className="flex justify-end">
+                            <div className="flex justify-end gap-4 mt-6">
                                 <button
                                     onClick={() => {
                                         setIsEditing(false);
                                         setName(user?.name || '');
                                         setEmail(user?.email || '');
                                     }}
-                                    className="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 px-4 py-2"
+                                    className="text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-300"
                                 >
                                     Cancel
                                 </button>

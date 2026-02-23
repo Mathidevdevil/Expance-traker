@@ -19,7 +19,7 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({ exposedHeaders: ['Content-Disposition'] }));
 app.use(express.json());
 
 // Routes
