@@ -89,7 +89,7 @@ const getMe = async (req, res) => {
 const updateDetails = async (req, res) => {
     const { name, email } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (user) {
         user.name = name || user.name;
@@ -174,7 +174,7 @@ const updateDetails = async (req, res) => {
 
         // This is much easier and cleaner for my mock store.
 
-        const updatedUser = await User.findByIdAndUpdate(req.user.id, {
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
             name: name || user.name,
             email: email || user.email
         }, { new: true }); // I need to implement findByIdAndUpdate in User mock in store.js. I didn't yet.

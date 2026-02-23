@@ -6,7 +6,7 @@ const { Income } = require('../utils/store');
 const getIncomes = async (req, res) => {
     try {
         const { source, startDate, endDate, month } = req.query;
-        let query = { userId: req.user.id };
+        let query = { userId: req.user._id };
 
         if (source) {
             query.source = source;
@@ -50,7 +50,7 @@ const addIncome = async (req, res) => {
         }
 
         const income = await Income.create({
-            userId: req.user.id,
+            userId: req.user._id,
             amount,
             source,
             description,
@@ -75,7 +75,7 @@ const updateIncome = async (req, res) => {
         }
 
         // Check for user
-        if (income.userId.toString() !== req.user.id) {
+        if (income.userId.toString() !== req.user._id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 
@@ -103,7 +103,7 @@ const deleteIncome = async (req, res) => {
         }
 
         // Check for user
-        if (income.userId.toString() !== req.user.id) {
+        if (income.userId.toString() !== req.user._id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 

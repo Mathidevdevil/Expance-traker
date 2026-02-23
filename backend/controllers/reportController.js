@@ -1,6 +1,5 @@
 const ExcelJS = require('exceljs');
-const Expense = require('../models/Expense');
-const Income = require('../models/Income');
+const { Expense, Income } = require('../utils/store');
 
 // Helper to generate Excel Buffer
 const generateExcelBuffer = async (userId, month, year) => {
@@ -8,23 +7,23 @@ const generateExcelBuffer = async (userId, month, year) => {
     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
     // Fetch previous balance (all transactions before this month)
-    const prevExpenses = await Expense.find({ userId, date: { $lt: startOfMonth } });
-    const prevIncomes = await Income.find({ userId, date: { $lt: startOfMonth } });
+    const prevExpenses = (await Expense.find({ userId, date: { $lt: startOfMonth } })).results;
+    const prevIncomes = (await Income.find({ userId, date: { $lt: startOfMonth } })).results;
 
     const totalPrevExpense = prevExpenses.reduce((acc, curr) => acc + curr.amount, 0);
     const totalPrevIncome = prevIncomes.reduce((acc, curr) => acc + curr.amount, 0);
     let currentBalance = totalPrevIncome - totalPrevExpense;
 
     // Fetch current month transactions
-    const expenses = await Expense.find({
+    const expenses = (await Expense.find({
         userId,
         date: { $gte: startOfMonth, $lte: endOfMonth }
-    }).lean();
+    })).results;
 
-    const incomes = await Income.find({
+    const incomes = (await Income.find({
         userId,
         date: { $gte: startOfMonth, $lte: endOfMonth }
-    }).lean();
+    })).results;
 
     // Merge and Sort
     const transactions = [
@@ -87,7 +86,7 @@ const downloadReport = async (req, res) => {
             return res.status(400).json({ message: 'Please provide month and year' });
         }
 
-        const buffer = await generateExcelBuffer(req.user.id, month, year);
+        const buffer = await generateExcelBuffer(req.user._id, month, year);
 
         const fileName = `Expense_Report_${year}_${month}.xlsx`;
 

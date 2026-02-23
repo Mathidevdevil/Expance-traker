@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const User = require('../models/User');
+const { User, Expense, Income } = require('../utils/store');
 const { generateExcelBuffer } = require('../controllers/reportController');
 const sendEmail = require('../utils/emailService');
 

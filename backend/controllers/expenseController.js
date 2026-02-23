@@ -6,7 +6,7 @@ const { Expense } = require('../utils/store');
 const getExpenses = async (req, res) => {
     try {
         const { category, startDate, endDate, month } = req.query;
-        let query = { userId: req.user.id };
+        let query = { userId: req.user._id };
 
         if (category) {
             query.category = category;
@@ -58,7 +58,7 @@ const addExpense = async (req, res) => {
         }
 
         const expense = await Expense.create({
-            userId: req.user.id,
+            userId: req.user._id,
             amount,
             category,
             description,
@@ -83,7 +83,7 @@ const updateExpense = async (req, res) => {
         }
 
         // Check for user
-        if (expense.userId.toString() !== req.user.id) {
+        if (expense.userId.toString() !== req.user._id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 
@@ -111,7 +111,7 @@ const deleteExpense = async (req, res) => {
         }
 
         // Check for user
-        if (expense.userId.toString() !== req.user.id) {
+        if (expense.userId.toString() !== req.user._id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 
