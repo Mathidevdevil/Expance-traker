@@ -8,8 +8,8 @@ const generateExcelBuffer = async (userId, month, year) => {
     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
     // Fetch previous balance (all transactions before this month)
-    const prevExpenses = await Expense.find({ userId, date: { $lt: startOfMonth } });
-    const prevIncomes = await Income.find({ userId, date: { $lt: startOfMonth } });
+    const prevExpenses = await Expense.find({ userId, date: { $lt: startOfMonth } }).lean();
+    const prevIncomes = await Income.find({ userId, date: { $lt: startOfMonth } }).lean();
 
     const totalPrevExpense = prevExpenses.reduce((acc, curr) => acc + curr.amount, 0);
     const totalPrevIncome = prevIncomes.reduce((acc, curr) => acc + curr.amount, 0);
@@ -19,12 +19,12 @@ const generateExcelBuffer = async (userId, month, year) => {
     const expenses = await Expense.find({
         userId,
         date: { $gte: startOfMonth, $lte: endOfMonth }
-    });
+    }).lean();
 
     const incomes = await Income.find({
         userId,
         date: { $gte: startOfMonth, $lte: endOfMonth }
-    });
+    }).lean();
 
     // Merge and Sort
     const transactions = [
