@@ -29,8 +29,7 @@ const getIncomes = async (req, res) => {
             };
         }
 
-        const incomeQuery = await Income.find(query);
-        const incomes = incomeQuery.sort({ date: -1 });
+        const incomes = await Income.find(query).sort({ date: -1 });
 
         res.status(200).json(incomes);
     } catch (error) {
