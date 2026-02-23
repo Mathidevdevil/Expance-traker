@@ -1,4 +1,4 @@
-const { Income } = require('../utils/store');
+const Income = require('../models/Income');
 
 // @desc    Get incomes
 // @route   GET /api/incomes

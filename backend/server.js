@@ -7,8 +7,11 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const incomeRoutes = require('./routes/incomeRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const scheduleMonthlyReport = require('./cron/monthlyReport');
+const connectDB = require('./config/db');
 
 dotenv.config();
+
+connectDB();
 
 const app = express();
 
@@ -23,7 +26,7 @@ app.use('/api/incomes', incomeRoutes);
 app.use('/api/reports', reportRoutes);
 
 app.get('/', (req, res) => {
-    res.send('API is running (In-Memory Mode)...');
+    res.send('API is running...');
 });
 
 // Cron Job
