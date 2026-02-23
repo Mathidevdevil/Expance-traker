@@ -58,6 +58,7 @@ const addExpense = async (req, res) => {
 
         res.status(201).json(expense);
     } catch (error) {
+        console.error('Error in addExpense:', error);
         res.status(500).json({ message: error.message });
     }
 };
