@@ -87,7 +87,17 @@ const Sidebar = ({ isOpen, onClose }) => {
                             onClick={toggleTheme}
                             className="flex items-center px-4 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-md transition-colors w-full text-left mt-4"
                         >
-                            {theme === 'light' ? <Moon className="w-5 h-5 shrink-0" /> : <Sun className="w-5 h-5 shrink-0" />}
+                            {theme === 'light' ? (
+                                <>
+                                    <Moon className="w-5 h-5 shrink-0 mr-3" />
+                                    Dark Mode
+                                </>
+                            ) : (
+                                <>
+                                    <Sun className="w-5 h-5 shrink-0 mr-3" />
+                                    Light Mode
+                                </>
+                            )}
                         </button>
                     </nav>
 
