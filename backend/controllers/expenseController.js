@@ -103,7 +103,7 @@ const deleteExpense = async (req, res) => {
         }
 
         // Check for user
-        if (expense.userId.toString() !== req.user._id) {
+        if (expense.userId.toString() !== req.user.id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 

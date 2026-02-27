@@ -1,14 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, TrendingDown, TrendingUp, User, LogOut, X, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, TrendingDown, TrendingUp, User, LogOut, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const location = useLocation();
     const { logout, user } = useAuth();
-    const { theme, toggleTheme } = useTheme();
 
     // Close sidebar when route changes on mobile
     useEffect(() => {
@@ -23,9 +22,9 @@ const Sidebar = ({ isOpen, onClose }) => {
 
     const navItems = [
         { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/incomes', label: 'Incomes', icon: TrendingUp },
-        { path: '/expenses', label: 'Expenses', icon: TrendingDown },
-        { path: '/profile', label: 'Profile', icon: User },
+        { path: '/incomes', label: 'Incomes', icon: TrendingUp, color: '#10B981' },
+        { path: '/expenses', label: 'Expenses', icon: TrendingDown, color: '#F43F5E' },
+        { path: '/profile', label: 'Profile', icon: User, color: '#3B82F6' },
     ];
 
     return (
@@ -33,7 +32,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             {/* Overlay for mobile */}
             <div
                 className={clsx(
-                    "fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300",
+                    "fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300",
                     isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                 )}
                 onClick={onClose}
@@ -41,73 +40,65 @@ const Sidebar = ({ isOpen, onClose }) => {
 
             {/* Sidebar */}
             <div className={clsx(
-                "flex flex-col w-64 h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white fixed left-0 top-0 z-50 transition-transform duration-300 transform lg:translate-x-0 border-r border-slate-200 dark:border-slate-800",
+                "flex flex-col w-64 h-screen bg-light-card dark:bg-dark-card border-r border-light-border dark:border-dark-border text-light-textPrimary dark:text-dark-textPrimary fixed left-0 top-0 z-50 transition-transform duration-300 transform lg:translate-x-0 overflow-hidden shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.2)]",
                 isOpen ? "translate-x-0" : "-translate-x-full"
             )}>
-                <div className="flex items-center justify-center h-16 border-b border-slate-200 dark:border-slate-800 px-4">
-                    <h1 className="text-xl font-bold text-slate-900 dark:text-white">FinTracker</h1>
-                    <button onClick={onClose} className="lg:hidden text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                <div className="flex items-center justify-center h-20 border-b border-light-border dark:border-dark-border px-4">
+                    <h1 className="text-xl font-bold text-light-primary dark:text-dark-primary">
+                        ExpenseTracker
+                    </h1>
+                    <button onClick={onClose} className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary absolute right-4">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
 
-                <div className="p-4 flex flex-col flex-1 overflow-y-auto">
-                    <div className="flex items-center gap-3 mb-6 px-2">
-                        <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-lg font-bold shrink-0 text-white">
-                            {user ? user.name.charAt(0).toUpperCase() : 'U'}
+                <div className="p-6 flex flex-col flex-1 overflow-y-auto">
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="w-12 h-12 rounded-full bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border flex items-center justify-center text-xl font-bold shrink-0 text-light-primary dark:text-dark-primary shadow-sm">
+                            {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                         </div>
                         <div className="overflow-hidden">
-                            <p className="text-sm font-medium truncate text-slate-900 dark:text-white">{user ? user.name : 'User'}</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user ? user.email : ''}</p>
+                            <p className="text-sm font-bold truncate text-light-textPrimary dark:text-dark-textPrimary">{user?.name ? user.name : 'User'}</p>
+                            <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary truncate">{user?.email ? user.email : ''}</p>
                         </div>
                     </div>
 
-                    <nav className="flex-1 space-y-1">
+                    <nav className="flex-1 space-y-2">
                         {navItems.map((item) => {
                             const Icon = item.icon;
+                            let activeIconColor = item.color;
+
                             return (
-                                <Link
-                                    key={item.path}
-                                    to={item.path}
-                                    className={clsx(
-                                        'flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors',
-                                        isActive(item.path)
-                                            ? 'bg-blue-600 text-white'
-                                            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                    )}
-                                >
-                                    <Icon className="w-5 h-5 mr-3 shrink-0" />
-                                    {item.label}
-                                </Link>
+                                <motion.div key={item.path} whileHover={{ x: 5 }} whileTap={{ scale: 0.98 }}>
+                                    <Link
+                                        to={item.path}
+                                        className={clsx(
+                                            'flex items-center px-4 py-3.5 text-sm font-medium rounded-xl transition-all',
+                                            isActive(item.path)
+                                                ? 'bg-light-primary/10 dark:bg-dark-primary/10 text-light-primary dark:text-dark-primary font-bold'
+                                                : 'text-light-textSecondary dark:text-dark-textSecondary hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
+                                        )}
+                                    >
+                                        <Icon
+                                            className="w-5 h-5 mr-3 shrink-0"
+                                            style={{ color: isActive(item.path) ? '' : 'inherit' }}
+                                        />
+                                        {item.label}
+                                    </Link>
+                                </motion.div>
                             );
                         })}
-
-                        {/* Theme Toggle Button */}
-                        <button
-                            onClick={toggleTheme}
-                            className="flex items-center px-4 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white rounded-md transition-colors w-full text-left mt-4"
-                        >
-                            {theme === 'light' ? (
-                                <>
-                                    <Moon className="w-5 h-5 shrink-0 mr-3" />
-                                    Dark Mode
-                                </>
-                            ) : (
-                                <>
-                                    <Sun className="w-5 h-5 shrink-0 mr-3" />
-                                    Light Mode
-                                </>
-                            )}
-                        </button>
                     </nav>
 
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={logout}
-                        className="flex items-center px-4 py-3 text-sm font-medium text-red-500 dark:text-red-400 rounded-md hover:bg-red-50 dark:hover:bg-slate-800 hover:text-red-600 dark:hover:text-red-300 transition-colors mt-auto"
+                        className="flex items-center px-4 py-3.5 text-sm font-medium text-light-expense dark:text-dark-expense rounded-xl hover:text-red-600 dark:hover:text-red-400 transition-colors mt-auto border border-transparent hover:border-light-expense/30 dark:hover:border-dark-expense/30"
                     >
                         <LogOut className="w-5 h-5 mr-3 shrink-0" />
                         Sign Out
-                    </button>
+                    </motion.button>
                 </div>
             </div>
         </>
@@ -115,3 +106,4 @@ const Sidebar = ({ isOpen, onClose }) => {
 };
 
 export default Sidebar;
+

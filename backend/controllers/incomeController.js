@@ -103,7 +103,7 @@ const deleteIncome = async (req, res) => {
         }
 
         // Check for user
-        if (income.userId.toString() !== req.user._id) {
+        if (income.userId.toString() !== req.user.id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 

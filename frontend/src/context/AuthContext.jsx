@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
             }
             return response.data;
         } catch (error) {
-            throw error.response.data.message || 'Registration failed';
+            throw error.response?.data?.message || 'Registration failed';
         }
     };
 

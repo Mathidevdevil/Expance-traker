@@ -1,0 +1,138 @@
+﻿
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\AnimatedButton.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\AnimatedCounter.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\CategoryChart.jsx
+  93:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  91 |                         ))}
+  92 |                     </Pie>
+> 93 |                     <Tooltip content={<CustomTooltip />} />
+     |                                        ^^^^^^^^^^^^^ This component is created during render
+  94 |                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
+  95 |                 </PieChart>
+  96 |             </ResponsiveContainer>
+
+  34 |     }
+  35 |
+> 36 |     const CustomTooltip = ({ active, payload }) => {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 37 |         if (active && payload && payload.length) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 38 |             return (
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |         return null;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |     };
+     | ^^^^^^ The component is created during render here
+  49 |
+  50 |     const renderActiveShape = (props) => {
+  51 |         const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;  react-hooks/static-components
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\Chart.jsx
+  86:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  84 |                         tickFormatter={(value) => `Γé╣${value}`}
+  85 |                     />
+> 86 |                     <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+     |                                        ^^^^^^^^^^^^^ This component is created during render
+  87 |                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
+  88 |                     <Bar dataKey="Income" fill="#10B981" radius={[4, 4, 0, 0]} maxBarSize={40} animationDuration={1500} />
+  89 |                     <Bar dataKey="Expense" fill="#F43F5E" radius={[4, 4, 0, 0]} maxBarSize={40} animationDuration={1500} />
+
+  49 |     }
+  50 |
+> 51 |     const CustomTooltip = ({ active, payload, label }) => {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 52 |         if (active && payload && payload.length) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 53 |             return (
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 64 |         return null;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 65 |     };
+     | ^^^^^^ The component is created during render here
+  66 |
+  67 |     return (
+  68 |         <div className="w-full h-full min-h-[300px] text-sm">  react-hooks/static-components
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\GlassCard.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\Layout.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\Sidebar.jsx
+   4:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                  no-unused-vars
+  17:8   warning  React Hook useEffect has a missing dependency: 'onClose'. Either include it or remove the dependency array. If 'onClose' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\components\TransactionModal.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\context\AuthContext.jsx
+   6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-refresh/only-export-components
+  15:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  13 |         const storedUser = JSON.parse(localStorage.getItem('user'));
+  14 |         if (storedUser) {
+> 15 |             setUser(storedUser);
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  16 |         }
+  17 |         setLoading(false);
+  18 |     }, []);  react-hooks/set-state-in-effect
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\context\GlobalContext.jsx
+  6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\context\ThemeContext.jsx
+  11:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   9 |         const localTheme = localStorage.getItem("theme");
+  10 |         if (localTheme === 'dark') {
+> 11 |             setTheme('dark');
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  12 |             document.documentElement.classList.add('dark');
+  13 |         } else {
+  14 |             setTheme('light');  react-hooks/set-state-in-effect
+  38:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-refresh/only-export-components
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\pages\Dashboard.jsx
+   8:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                      no-unused-vars
+  19:8   warning  React Hook useEffect has missing dependencies: 'getExpenses' and 'getIncomes'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\pages\Expenses.jsx
+   4:10  error    'currencyFormat' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                           no-unused-vars
+   5:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                   no-unused-vars
+  47:8   warning  React Hook useEffect has a missing dependency: 'getExpenses'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\pages\Incomes.jsx
+   4:10  error    'currencyFormat' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                          no-unused-vars
+   5:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                  no-unused-vars
+  47:8   warning  React Hook useEffect has a missing dependency: 'getIncomes'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\mathi\Downloads\Exp\Expance-traker\frontend\src\pages\Profile.jsx
+  5:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Γ£û 23 problems (19 errors, 4 warnings)
+
