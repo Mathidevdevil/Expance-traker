@@ -15,8 +15,8 @@ const Layout = ({ children }) => {
     return (
         <div className="flex min-h-screen text-light-textPrimary dark:text-dark-textPrimary bg-gradient-to-br from-indigo-50 via-slate-50 to-cyan-100 dark:from-gray-950 dark:via-black dark:to-neutral-950 relative overflow-hidden transition-colors duration-300 z-0">
             {/* Ambient Background Blobs for Premium Glass Effect */}
-            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 dark:bg-blue-900/20 blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-400/20 dark:bg-purple-900/20 blur-[120px] pointer-events-none" />
+            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/10 dark:bg-blue-900/10 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-400/10 dark:bg-purple-900/10 blur-[120px] pointer-events-none" />
 
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 

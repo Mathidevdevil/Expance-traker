@@ -3,14 +3,17 @@ import { useAuth } from '../context/AuthContext';
 import { User, Mail, Download, Loader2 } from 'lucide-react';
 import api from '../utils/api';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import GlassCard from '../components/GlassCard';
 import AnimatedButton from '../components/AnimatedButton';
+import ReportPreviewModal from '../components/ReportPreviewModal';
 
 const Profile = () => {
     const { user, updateUserProfile } = useAuth();
     const [downloading, setDownloading] = useState(false);
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     // Edit State
     const [isEditing, setIsEditing] = useState(false);
@@ -20,10 +23,11 @@ const Profile = () => {
     const handleUpdate = async () => {
         try {
             await updateUserProfile({ name, email });
+            toast.success("Profile updated successfully!");
             setIsEditing(false);
         } catch (error) {
             console.error(error);
-            alert(error);
+            toast.error(error || "Failed to update profile");
         }
     };
 
@@ -46,9 +50,11 @@ const Profile = () => {
             document.body.appendChild(link);
             link.click();
             link.parentNode.removeChild(link);
+            toast.success("Report downloaded successfully!");
+            setIsPreviewOpen(false);
         } catch (error) {
             console.error('Download failed:', error);
-            alert('Failed to download report');
+            toast.error('Failed to download report');
         } finally {
             setDownloading(false);
         }
@@ -177,8 +183,7 @@ const Profile = () => {
                         </div>
 
                         <AnimatedButton
-                            onClick={handleDownload}
-                            disabled={downloading}
+                            onClick={() => setIsPreviewOpen(true)}
                             className="w-full !rounded-xl !py-4 shadow-md bg-light-primary dark:bg-dark-primary text-white hover:opacity-90 border-transparent"
                         >
                             {downloading ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : <Download className="w-5 h-5 mr-2" />}
@@ -187,6 +192,15 @@ const Profile = () => {
                     </div>
                 </GlassCard>
             </div>
+
+            <ReportPreviewModal
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                onDownload={handleDownload}
+                month={month}
+                year={year}
+                downloading={downloading}
+            />
         </div>
     );
 };

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
 const AuthPage = ({ initialMode = 'login' }) => {
@@ -9,7 +10,8 @@ const AuthPage = ({ initialMode = 'login' }) => {
     const { login, register } = useAuth();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -23,7 +25,6 @@ const AuthPage = ({ initialMode = 'login' }) => {
 
     useEffect(() => {
         setIsSignUp(initialMode === 'register');
-        setError(null);
         setFormData({ name: '', email: '', password: '', confirmPassword: '' });
     }, [initialMode]);
 
@@ -31,19 +32,39 @@ const AuthPage = ({ initialMode = 'login' }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
-        setError(null);
-        if (password !== confirmPassword) {
-            setError("Passwords do not match");
+
+        if (!validateEmail(email)) {
+            toast.error("Please enter a valid email address");
             return;
         }
+
+        if (password.length < 6) {
+            toast.error("Password must be at least 6 characters long");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+
         setIsLoading(true);
         try {
             await register({ name, email, password });
+            toast.success("Account created successfully!");
             navigate('/');
         } catch (err) {
-            setError(err);
+            toast.error(err || "Registration failed");
         } finally {
             setIsLoading(false);
         }
@@ -51,13 +72,19 @@ const AuthPage = ({ initialMode = 'login' }) => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(null);
+
+        if (!validateEmail(email)) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
+
         setIsLoading(true);
         try {
             await login({ email, password });
+            toast.success("Welcome back!");
             navigate('/');
         } catch (err) {
-            setError(err);
+            toast.error(err || "Invalid credentials");
         } finally {
             setIsLoading(false);
         }
@@ -81,12 +108,22 @@ const AuthPage = ({ initialMode = 'login' }) => {
 
                         <span className="text-xs text-slate-500 dark:text-slate-400 mb-4">or use your email for registration</span>
 
-                        {error && isSignUp && <div className="text-[#F43F5E] text-sm mb-3">{error}</div>}
+                        <input type="text" name="name" placeholder="Name" value={name} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all" />
+                        <input type="email" name="email" placeholder="Email" value={email} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all" />
 
-                        <input type="text" name="name" placeholder="Name" value={name} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-                        <input type="email" name="email" placeholder="Email" value={email} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-                        <input type="password" name="password" placeholder="Password" value={password} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-                        <input type="password" name="confirmPassword" placeholder="Confirm Password" value={confirmPassword} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                        <div className="relative w-full my-2">
+                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" value={password} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all pr-10" />
+                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                        </div>
+
+                        <div className="relative w-full my-2">
+                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password" value={confirmPassword} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all pr-10" />
+                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                                {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                        </div>
 
                         <button disabled={isLoading} className="mt-4 rounded-full border border-blue-600 bg-[#7C3AED] text-white font-bold text-xs py-3 px-11 uppercase tracking-wider hover:bg-[#6D28D9] transition-transform active:scale-95 shadow-md flex items-center justify-center">
                             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign Up'}
@@ -110,10 +147,14 @@ const AuthPage = ({ initialMode = 'login' }) => {
 
                         <span className="text-xs text-slate-500 dark:text-slate-400 mb-4">or use your account</span>
 
-                        {error && !isSignUp && <div className="text-[#F43F5E] text-sm mb-3">{error}</div>}
+                        <input type="email" name="email" placeholder="Email" value={email} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all" />
 
-                        <input type="email" name="email" placeholder="Email" value={email} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-                        <input type="password" name="password" placeholder="Password" value={password} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 my-2 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                        <div className="relative w-full my-2">
+                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" value={password} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all pr-10" />
+                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                        </div>
 
                         <a href="#" className="text-slate-500 dark:text-slate-400 text-sm my-4 hover:text-slate-800 dark:hover:text-white transition-colors">Forgot your password?</a>
 

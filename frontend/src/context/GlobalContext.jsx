@@ -9,6 +9,7 @@ export const GlobalProvider = ({ children }) => {
     const [incomes, setIncomes] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [error, setError] = useState(null);
+    const [timeFilter, setTimeFilter] = useState('all'); // 'week', 'month', 'all'
 
     // Calculate totals
     const totalIncome = incomes.reduce((acc, income) => acc + Number(income.amount), 0);
@@ -23,9 +24,28 @@ export const GlobalProvider = ({ children }) => {
         return history.slice(0, 5); // Return recent 5
     };
 
+    const getDateRangeParams = () => {
+        if (timeFilter === 'all') return {};
+
+        const end = new Date();
+        const start = new Date();
+
+        if (timeFilter === 'week') {
+            start.setDate(start.getDate() - 7);
+        } else if (timeFilter === 'month') {
+            start.setMonth(start.getMonth() - 1);
+        }
+
+        return {
+            startDate: start.toISOString(),
+            endDate: end.toISOString()
+        };
+    };
+
     const getIncomes = async () => {
         try {
-            const response = await api.get('/incomes');
+            const params = getDateRangeParams();
+            const response = await api.get('/incomes', { params });
             setIncomes(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
             setError(err.response?.data?.message || "Error fetching incomes");
@@ -51,9 +71,20 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
+    const updateIncome = async (id, income) => {
+        try {
+            await api.put(`/incomes/${id}`, income);
+            getIncomes();
+        } catch (err) {
+            setError(err.response?.data?.message || "Error updating income");
+            throw err;
+        }
+    };
+
     const getExpenses = async () => {
         try {
-            const response = await api.get('/expenses');
+            const params = getDateRangeParams();
+            const response = await api.get('/expenses', { params });
             setExpenses(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
             setError(err.response?.data?.message || "Error fetching expenses");
@@ -79,22 +110,36 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
+    const updateExpense = async (id, expense) => {
+        try {
+            await api.put(`/expenses/${id}`, expense);
+            getExpenses();
+        } catch (err) {
+            setError(err.response?.data?.message || "Error updating expense");
+            throw err;
+        }
+    };
+
     return (
         <GlobalContext.Provider value={{
             addIncome,
             getIncomes,
             incomes,
             deleteIncome,
+            updateIncome,
             addExpense,
             getExpenses,
             deleteExpense,
+            updateExpense,
             expenses,
             totalIncome,
             totalExpense,
             totalBalance,
             transactionHistory,
             error,
-            setError
+            setError,
+            timeFilter,
+            setTimeFilter
         }}>
             {children}
         </GlobalContext.Provider>

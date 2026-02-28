@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Tag, IndianRupee, Calendar } from 'lucide-react';
 import GlassCard from './GlassCard';
 
-const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleInput, isLoading, error }) => {
+const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleInput, isLoading, error, isEditing = false }) => {
     return (
         <AnimatePresence>
             {isOpen && (
@@ -33,7 +33,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                             </button>
 
                             <h2 className="text-2xl font-bold text-light-textPrimary dark:text-dark-textPrimary mb-6">
-                                Add {type === 'income' ? 'Income' : 'Expense'}
+                                {isEditing ? 'Edit' : 'Add'} {type === 'income' ? 'Income' : 'Expense'}
                             </h2>
 
                             {error && (
@@ -137,7 +137,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                                     {isLoading ? (
                                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                     ) : (
-                                        `Add ${type === 'income' ? 'Income' : 'Expense'}`
+                                        `${isEditing ? 'Update' : 'Add'} ${type === 'income' ? 'Income' : 'Expense'}`
                                     )}
                                 </motion.button>
                             </form>

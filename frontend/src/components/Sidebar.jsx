@@ -3,11 +3,13 @@ import { LayoutDashboard, TrendingDown, TrendingUp, User, LogOut, X } from 'luci
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ConfirmationModal from './ConfirmationModal';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const location = useLocation();
     const { logout, user } = useAuth();
+    const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
     // Close sidebar when route changes on mobile
     useEffect(() => {
@@ -93,7 +95,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <motion.button
                         whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={logout}
+                        onClick={() => setIsLogoutConfirmOpen(true)}
                         className="flex items-center px-4 py-3.5 text-sm font-medium text-light-expense dark:text-dark-expense rounded-xl hover:text-red-600 dark:hover:text-red-400 transition-colors mt-auto border border-transparent hover:border-light-expense/30 dark:hover:border-dark-expense/30"
                     >
                         <LogOut className="w-5 h-5 mr-3 shrink-0" />
@@ -101,6 +103,17 @@ const Sidebar = ({ isOpen, onClose }) => {
                     </motion.button>
                 </div>
             </div>
+
+            <ConfirmationModal
+                isOpen={isLogoutConfirmOpen}
+                onClose={() => setIsLogoutConfirmOpen(false)}
+                onConfirm={logout}
+                title="Sign Out"
+                message="Are you sure you want to sign out of your account?"
+                confirmText="Sign Out"
+                cancelText="Cancel"
+                isDestructive={true}
+            />
         </>
     );
 };

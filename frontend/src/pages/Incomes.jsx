@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { useGlobalContext } from '../context/GlobalContext';
-import { Trash2, Calendar, IndianRupee, Tag, Plus } from 'lucide-react';
+import { Trash2, Calendar, IndianRupee, Tag, Plus, Pencil } from 'lucide-react';
 import { currencyFormat } from '../utils/formatCurrency';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import GlassCard from '../components/GlassCard';
 import AnimatedButton from '../components/AnimatedButton';
 import AnimatedCounter from '../components/AnimatedCounter';
 import TransactionModal from '../components/TransactionModal';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const Incomes = () => {
-    const { addIncome, incomes, getIncomes, deleteIncome, totalIncome, error, setError } = useGlobalContext();
+    const { addIncome, incomes, getIncomes, deleteIncome, updateIncome, totalIncome, error, setError } = useGlobalContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [editingId, setEditingId] = useState(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
 
     const [inputState, setInputState] = useState({
         amount: '',
@@ -27,6 +33,28 @@ const Incomes = () => {
         setError(null);
     };
 
+    const handleEditClick = (income) => {
+        setEditingId(income._id);
+
+        let sourceValue = income.source || '';
+        let customSourceValue = '';
+
+        const standardSources = ['salary', 'part time', 'others'];
+        if (sourceValue && !standardSources.includes(sourceValue.toLowerCase())) {
+            customSourceValue = sourceValue;
+            sourceValue = 'others';
+        }
+
+        setInputState({
+            amount: income.amount,
+            date: income.date ? moment(income.date).format('YYYY-MM-DD') : '',
+            source: sourceValue.toLowerCase(),
+            title: income.title,
+            customSource: customSourceValue,
+        });
+        setIsModalOpen(true);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -38,7 +66,15 @@ const Incomes = () => {
                 source: inputState.source === 'others' ? inputState.customSource : inputState.source,
                 description: inputState.title,
             };
-            await addIncome(payload);
+
+            if (editingId) {
+                await updateIncome(editingId, payload);
+                toast.success('Income updated successfully');
+            } else {
+                await addIncome(payload);
+                toast.success('Income added successfully');
+            }
+
             setInputState({
                 amount: '',
                 date: '',
@@ -47,16 +83,38 @@ const Incomes = () => {
                 customSource: '',
             });
             setIsModalOpen(false);
+            setEditingId(null);
+        } catch (err) {
+            // Error is handled in context, but we might want to catch specifically here if needed
         } finally {
             setIsLoading(false);
         }
     };
+
+    const requestDelete = (id, title) => {
+        setItemToDelete({ id, title });
+        setIsConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!itemToDelete) return;
+        await deleteIncome(itemToDelete.id);
+        toast.success("Income deleted successfully");
+        setIsConfirmOpen(false);
+        setItemToDelete(null);
+    }
 
     useEffect(() => {
         getIncomes();
     }, []);
 
     const sortedIncomes = [...incomes].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const filteredIncomes = sortedIncomes.filter(income =>
+        income.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        income.source?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        income.amount?.toString().includes(searchQuery)
+    );
 
     return (
         <div className="space-y-6 relative h-full">
@@ -88,7 +146,11 @@ const Incomes = () => {
                     </GlassCard>
 
                     <AnimatedButton
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                            setEditingId(null);
+                            setInputState({ amount: '', date: '', source: '', title: '', customSource: '' });
+                            setIsModalOpen(true);
+                        }}
                         className="w-full sm:w-auto px-6 py-4 shadow-[0_4px_12px_rgba(22,163,74,0.2)] bg-light-income dark:bg-dark-income text-white hover:opacity-90 border-transparent"
                     >
                         <Plus className="w-5 h-5 mr-2" />
@@ -99,10 +161,26 @@ const Incomes = () => {
 
             <div className="w-full">
                 <GlassCard className="min-h-[400px]">
-                    <h3 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary mb-6">Income History</h3>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <h3 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Income History</h3>
+                        <div className="relative w-full sm:w-64">
+                            <input
+                                type="text"
+                                placeholder="Search incomes..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full px-4 py-2 pl-4 pr-10 bg-white/50 dark:bg-black/50 border border-light-border dark:border-dark-border rounded-xl text-sm text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-income focus:border-transparent transition-all"
+                            />
+                            {searchQuery && (
+                                <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary">
+                                    <Trash2 className="w-4 h-4 opacity-50 hover:opacity-100" />
+                                </button>
+                            )}
+                        </div>
+                    </div>
                     <div className="space-y-4">
                         <AnimatePresence>
-                            {sortedIncomes.map((income, index) => {
+                            {filteredIncomes.map((income, index) => {
                                 const isIncome = true; // Always true for Incomes component
                                 const amount = income.amount;
                                 return (
@@ -112,7 +190,9 @@ const Incomes = () => {
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                         transition={{ duration: 0.3, delay: index * 0.05 }}
-                                        className={`p-4 rounded-xl bg-white/50 dark:bg-black/50 backdrop-blur-md border border-white/50 dark:border-white/20 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between group hover:border-light-income/50 dark:hover:border-dark-income/50 transition-colors gap-4`}
+                                        whileHover={{ scale: 1.01, x: 5, transition: { duration: 0.2 } }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={`p-4 rounded-xl bg-white/50 dark:bg-black/50 backdrop-blur-md border border-white/50 dark:border-white/20 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between group hover:border-light-income/50 dark:hover:border-dark-income/50 transition-all gap-4`}
                                     >
                                         <div className="flex items-start sm:items-center gap-4 flex-1 w-full sm:w-auto min-w-0 mr-0 sm:mr-4">
                                             <div className="w-12 h-12 rounded-full bg-light-income/10 dark:bg-dark-income/20 text-light-income dark:text-dark-income flex items-center justify-center shrink-0 border border-light-income/30 dark:border-dark-income/30">
@@ -133,22 +213,42 @@ const Incomes = () => {
                                             <p className={`font-bold shrink-0 ${isIncome ? 'text-light-income dark:text-dark-income' : 'text-light-expense dark:text-dark-expense'}`}>
                                                 {isIncome ? '+' : '-'}{currencyFormat(amount)}
                                             </p>
-                                            <button
-                                                onClick={() => deleteIncome(income._id)}
-                                                className="p-2 sm:p-3 text-light-textSecondary dark:text-dark-textSecondary hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all sm:opacity-0 group-hover:opacity-100 focus:opacity-100 transform active:scale-95"
-                                            >
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
+                                            <div className="flex items-center sm:opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+                                                <button
+                                                    onClick={() => handleEditClick(income)}
+                                                    className="p-2 sm:p-2.5 text-light-textSecondary dark:text-dark-textSecondary hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full transition-all transform active:scale-95"
+                                                    title="Edit Income"
+                                                >
+                                                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => requestDelete(income._id, income.title)}
+                                                    className="p-2 sm:p-2.5 text-light-textSecondary dark:text-dark-textSecondary hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all transform active:scale-95"
+                                                    title="Delete Income"
+                                                >
+                                                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </motion.div>
                                 )
                             })}
                         </AnimatePresence>
-                        {incomes.length === 0 && (
-                            <div className="text-center py-16 text-light-textSecondary dark:text-dark-textSecondary border border-dashed border-light-border dark:border-dark-border rounded-xl">
-                                <Tag className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                                <p>No incomes found. Add one to get started.</p>
-                            </div>
+
+                        {filteredIncomes.length === 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-center py-20 bg-white/30 dark:bg-black/30 border border-dashed border-light-border dark:border-dark-border rounded-2xl flex flex-col items-center justify-center"
+                            >
+                                <div className="w-16 h-16 bg-light-income/10 dark:bg-dark-income/10 rounded-full flex flex-col items-center justify-center mb-4 text-light-income dark:text-dark-income shadow-inner">
+                                    <Tag className="w-8 h-8 opacity-50" />
+                                </div>
+                                <h4 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">No incomes found</h4>
+                                <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary max-w-[250px]">
+                                    {searchQuery ? `We couldn't find anything matching "${searchQuery}".` : "You haven't added any incomes yet. Add one to start tracking!"}
+                                </p>
+                            </motion.div>
                         )}
                     </div>
                 </GlassCard>
@@ -158,6 +258,7 @@ const Incomes = () => {
                 isOpen={isModalOpen}
                 onClose={() => {
                     setIsModalOpen(false);
+                    setEditingId(null);
                     setError(null);
                 }}
                 onSubmit={handleSubmit}
@@ -166,6 +267,21 @@ const Incomes = () => {
                 handleInput={handleInput}
                 isLoading={isLoading}
                 error={error}
+                isEditing={!!editingId}
+            />
+
+            <ConfirmationModal
+                isOpen={isConfirmOpen}
+                onClose={() => {
+                    setIsConfirmOpen(false);
+                    setItemToDelete(null);
+                }}
+                onConfirm={confirmDelete}
+                title="Delete Income"
+                message={`Are you sure you want to delete "${itemToDelete?.title}"? This action cannot be undone.`}
+                confirmText="Delete Income"
+                cancelText="Cancel"
+                isDestructive={true}
             />
         </div >
     );

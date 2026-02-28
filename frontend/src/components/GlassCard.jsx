@@ -10,7 +10,7 @@ const GlassCard = ({ children, className, onClick, ...props }) => {
             whileHover={onClick ? { scale: 1.02, transition: { duration: 0.2 } } : {}}
             onClick={onClick}
             className={clsx(
-                "glass p-6 w-full",
+                "glass p-5 md:p-6 w-full shadow-lg dark:shadow-black/20",
                 onClick && "cursor-pointer",
                 className
             )}
