@@ -22,15 +22,15 @@ export default {
                 },
                 // DARK MODE COLORS
                 dark: {
-                    bg: "#0F172A",
+                    bg: "#000000",
                     primary: "#3B82F6",
                     accent: "#22D3EE",
                     income: "#22C55E",
                     expense: "#EF4444",
-                    card: "#1E293B",
-                    border: "#334155",
+                    card: "#0a0a0a",
+                    border: "#222222",
                     textPrimary: "#F1F5F9",
-                    textSecondary: "#94A3B8",
+                    textSecondary: "#A3A3A3",
                 }
             },
             fontFamily: {

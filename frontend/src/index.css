@@ -12,7 +12,7 @@
   }
 
   body {
-    @apply bg-light-bg dark:bg-dark-bg text-light-textPrimary dark:text-dark-textPrimary antialiased transition-colors duration-300;
+    @apply bg-gradient-to-br from-indigo-50 via-slate-50 to-cyan-100 dark:from-gray-950 dark:via-black dark:to-neutral-950 text-light-textPrimary dark:text-dark-textPrimary antialiased transition-colors duration-300;
     min-height: 100vh;
   }
 
@@ -34,6 +34,16 @@
     @apply bg-slate-300 dark:bg-slate-600;
   }
 
+  /* Utility for hiding scrollbar but keeping functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   select option {
     @apply bg-light-bg text-light-textPrimary dark:bg-dark-card dark:text-dark-textPrimary;
   }
@@ -41,11 +51,19 @@
 
 @layer utilities {
   .glass {
-    @apply bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-[20px] transition-all duration-300;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    @apply rounded-[20px] transition-all duration-300;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
   }
 
   .dark .glass {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
 }

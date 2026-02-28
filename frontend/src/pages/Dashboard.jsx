@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import moment from 'moment';
 import { useGlobalContext } from '../context/GlobalContext';
 import { useAuth } from '../context/AuthContext';
 import Chart from '../components/Chart';
@@ -32,7 +33,7 @@ const Dashboard = () => {
                     animate={{ opacity: 1, x: 0 }}
                     className="text-3xl font-bold text-light-textPrimary dark:text-dark-textPrimary mb-2"
                 >
-                    Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
+                    Welcome back, {user?.name?.split(' ')[0] || 'User'}!
                 </motion.h1>
                 <motion.p
                     initial={{ opacity: 0, x: -20 }}
@@ -105,7 +106,7 @@ const Dashboard = () => {
                 <div className="space-y-6">
                     <GlassCard>
                         <h3 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary mb-6">Expense Categories</h3>
-                        <div className="w-full h-[250px]">
+                        <div className="w-full h-[300px]">
                             <CategoryChart />
                         </div>
                     </GlassCard>
@@ -128,12 +129,16 @@ const Dashboard = () => {
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: index * 0.1 }}
                                             key={_id}
-                                            className={`p-4 rounded-xl border border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between border-l-4 gap-2 ${isIncome ? 'border-l-light-income dark:border-l-dark-income' : 'border-l-light-expense dark:border-l-dark-expense'
-                                                }`}
+                                            className={`p-4 rounded-xl border border-white/50 dark:border-white/20 bg-white/50 dark:bg-black/50 backdrop-blur-md shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2`}
                                         >
-                                            <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary truncate mr-0 sm:mr-4">
-                                                {title || description}
-                                            </p>
+                                            <div className="flex-1 min-w-0 mr-0 sm:mr-4">
+                                                <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary truncate">
+                                                    {title || description}
+                                                </p>
+                                                <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mt-0.5">
+                                                    {item.date ? moment(item.date).format('DD MMM YYYY') : ''}
+                                                </p>
+                                            </div>
                                             <p className={`font-bold shrink-0 self-end sm:self-auto ${isIncome ? 'text-light-income dark:text-dark-income' : 'text-light-expense dark:text-dark-expense'}`}>
                                                 {isIncome ? '+' : '-'}{currencyFormat(amount)}
                                             </p>
@@ -146,8 +151,8 @@ const Dashboard = () => {
                         </div>
                     </GlassCard>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

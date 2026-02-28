@@ -10,7 +10,11 @@ const Layout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen text-light-textPrimary dark:text-dark-textPrimary bg-transparent">
+        <div className="flex min-h-screen text-light-textPrimary dark:text-dark-textPrimary bg-gradient-to-br from-indigo-50 via-slate-50 to-cyan-100 dark:from-gray-950 dark:via-black dark:to-neutral-950 relative overflow-hidden transition-colors duration-300">
+            {/* Ambient Background Blobs for Premium Glass Effect */}
+            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 dark:bg-blue-900/20 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-400/20 dark:bg-purple-900/20 blur-[120px] pointer-events-none" />
+
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className="flex-1 flex flex-col min-w-0 lg:ml-64 transition-all duration-300">
@@ -19,16 +23,16 @@ const Layout = ({ children }) => {
                     <div className="flex items-center">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-primary dark:hover:text-dark-primary p-2 -ml-2 rounded-md transition-colors"
+                            className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-primary dark:hover:text-dark-primary p-2 -ml-2 rounded-md transition-colors flex-shrink-0"
                         >
                             <Menu className="w-6 h-6" />
                         </button>
-                        <h1 className="ml-2 sm:ml-4 text-lg sm:text-xl font-bold text-light-textPrimary dark:text-dark-textPrimary lg:hidden truncate max-w-[120px] sm:max-w-none">ExpenseTracker</h1>
+                        <h1 className="ml-1 sm:ml-4 text-sm sm:text-xl font-bold text-light-textPrimary dark:text-dark-textPrimary lg:hidden truncate max-w-[100px] sm:max-w-none">ExpenseTracker</h1>
                     </div>
 
-                    <div className="ml-auto flex items-center gap-2 sm:gap-4">
+                    <div className="ml-auto flex items-center gap-1 sm:gap-4 flex-shrink-0">
                         <ThemeToggle />
-                        <div className="bg-light-bg dark:bg-dark-bg px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border border-light-border dark:border-dark-border text-xs sm:text-sm font-medium shadow-sm">
+                        <div className="px-1 sm:px-2 py-1 flex-shrink-0 overflow-hidden max-w-full">
                             <Clock />
                         </div>
                     </div>

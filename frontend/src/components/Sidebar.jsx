@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
             {/* Sidebar */}
             <div className={clsx(
-                "flex flex-col w-64 h-screen bg-light-card dark:bg-dark-card border-r border-light-border dark:border-dark-border text-light-textPrimary dark:text-dark-textPrimary fixed left-0 top-0 z-50 transition-transform duration-300 transform lg:translate-x-0 overflow-hidden shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.2)]",
+                "flex flex-col w-64 h-screen glass rounded-none border-y-0 border-l-0 border-r border-light-border dark:border-dark-border text-light-textPrimary dark:text-dark-textPrimary fixed left-0 top-0 z-50 transition-transform duration-300 transform lg:translate-x-0 overflow-hidden shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.4)]",
                 isOpen ? "translate-x-0" : "-translate-x-full"
             )}>
                 <div className="flex items-center justify-center h-20 border-b border-light-border dark:border-dark-border px-4">

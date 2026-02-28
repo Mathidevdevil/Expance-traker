@@ -93,43 +93,43 @@ const Profile = () => {
 
                     <div className="space-y-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full border border-light-primary/30 dark:border-dark-primary/30 bg-light-primary/10 dark:bg-dark-primary/10 flex items-center justify-center text-light-primary dark:text-dark-primary">
+                            <div className="w-10 h-10 flex items-center justify-center text-light-primary dark:text-dark-primary shrink-0">
                                 <User className="w-6 h-6" />
                             </div>
-                            <div className="flex-1">
-                                <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary">Full Name</p>
+                            <div className="flex-1 overflow-visible">
+                                <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary mb-1">Full Name</p>
                                 {isEditing ? (
                                     <input
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        className="w-full mt-1 px-4 py-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
+                                        className="w-full px-4 py-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
                                     />
                                 ) : (
-                                    <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary text-lg">{user?.name}</p>
+                                    <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary text-sm sm:text-base whitespace-nowrap">{user?.name}</p>
                                 )}
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full border border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg flex items-center justify-center text-light-textSecondary dark:text-dark-textSecondary">
+                            <div className="w-10 h-10 flex items-center justify-center text-light-textSecondary dark:text-dark-textSecondary shrink-0">
                                 <Mail className="w-6 h-6" />
                             </div>
-                            <div className="flex-1">
-                                <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary">Email Address</p>
+                            <div className="flex-1 overflow-visible">
+                                <p className="text-sm text-light-textSecondary dark:text-dark-textSecondary mb-1">Email Address</p>
                                 {isEditing ? (
                                     <input
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full mt-1 px-4 py-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
+                                        className="w-full px-4 py-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
                                     />
                                 ) : (
-                                    <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary text-lg">{user?.email}</p>
+                                    <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary text-sm sm:text-base whitespace-nowrap">{user?.email}</p>
                                 )}
                             </div>
                         </div>
                         {isEditing && (
-                            <div className="flex justify-end gap-4 mt-6">
+                            <div className="flex justify-end mt-6">
                                 <AnimatedButton
                                     variant="ghost"
                                     onClick={() => {
@@ -137,7 +137,7 @@ const Profile = () => {
                                         setName(user?.name || '');
                                         setEmail(user?.email || '');
                                     }}
-                                    className="text-sm px-4 py-2"
+                                    className="text-sm px-4 py-2 border border-light-border dark:border-dark-border"
                                 >
                                     Cancel
                                 </AnimatedButton>
@@ -158,7 +158,7 @@ const Profile = () => {
                                 <select
                                     value={month}
                                     onChange={(e) => setMonth(e.target.value)}
-                                    className="w-full px-4 py-3 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
+                                    className="w-full h-[50px] px-4 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
                                 >
                                     {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                                         <option key={m} value={m}>{new Date(0, m - 1).toLocaleString('default', { month: 'long' })}</option>
@@ -171,7 +171,7 @@ const Profile = () => {
                                     type="number"
                                     value={year}
                                     onChange={(e) => setYear(e.target.value)}
-                                    className="w-full px-4 py-3 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
+                                    className="w-full h-[50px] px-4 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
                                 />
                             </div>
                         </div>

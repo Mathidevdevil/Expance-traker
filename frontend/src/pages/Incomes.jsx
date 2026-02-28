@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import moment from 'moment';
 import { useGlobalContext } from '../context/GlobalContext';
 import { Trash2, Calendar, IndianRupee, Tag, Plus } from 'lucide-react';
 import { currencyFormat } from '../utils/formatCurrency';
@@ -111,8 +112,7 @@ const Incomes = () => {
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                         transition={{ duration: 0.3, delay: index * 0.05 }}
-                                        className={`p-4 rounded-xl bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between group hover:border-light-income/50 dark:hover:border-dark-income/50 transition-colors gap-4 border-l-4 ${isIncome ? 'border-l-light-income dark:border-l-dark-income' : 'border-l-light-expense dark:border-l-dark-expense'
-                                            }`}
+                                        className={`p-4 rounded-xl bg-white/50 dark:bg-black/50 backdrop-blur-md border border-white/50 dark:border-white/20 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between group hover:border-light-income/50 dark:hover:border-dark-income/50 transition-colors gap-4`}
                                     >
                                         <div className="flex items-start sm:items-center gap-4 flex-1 w-full sm:w-auto min-w-0 mr-0 sm:mr-4">
                                             <div className="w-12 h-12 rounded-full bg-light-income/10 dark:bg-dark-income/20 text-light-income dark:text-dark-income flex items-center justify-center shrink-0 border border-light-income/30 dark:border-dark-income/30">
@@ -122,10 +122,10 @@ const Incomes = () => {
                                                 <h4 className="font-bold text-light-textPrimary dark:text-dark-textPrimary truncate text-lg">
                                                     {income.title}
                                                 </h4>
-                                                <div className="flex flex-wrap items-center text-xs text-light-textSecondary dark:text-dark-textSecondary gap-2 sm:gap-4 mt-1">
-                                                    <span className="flex items-center whitespace-nowrap"><IndianRupee className="w-3.5 h-3.5 mr-1" /> {income.amount}</span>
-                                                    <span className="flex items-center whitespace-nowrap"><Calendar className="w-3.5 h-3.5 mr-1" /> {new Date(income.date).toLocaleDateString()}</span>
-                                                    <span className="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full text-light-textPrimary dark:text-dark-textSecondary capitalize whitespace-nowrap">{income.source || 'Other'}</span>
+                                                <div className="flex flex-wrap items-center text-sm text-light-textSecondary dark:text-dark-textSecondary gap-3 sm:gap-5 mt-1">
+                                                    <span className="flex items-center whitespace-nowrap"><IndianRupee className="w-4 h-4 mr-1" /> {income.amount}</span>
+                                                    <span className="flex items-center whitespace-nowrap"><Calendar className="w-4 h-4 mr-1" /> {moment(income.date).format('DD MMM YYYY')}</span>
+                                                    <span className="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full text-xs text-light-textPrimary dark:text-dark-textSecondary capitalize whitespace-nowrap">{income.source || 'Other'}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -152,7 +152,7 @@ const Incomes = () => {
                         )}
                     </div>
                 </GlassCard>
-            </div>
+            </div >
 
             <TransactionModal
                 isOpen={isModalOpen}
@@ -167,7 +167,7 @@ const Incomes = () => {
                 isLoading={isLoading}
                 error={error}
             />
-        </div>
+        </div >
     );
 };
 
