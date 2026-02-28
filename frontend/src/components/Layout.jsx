@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 
 import Clock from './Clock';
 import ThemeToggle from './ThemeToggle';
-import PixelBlast from './PixelBlast';
 import { useTheme } from '../context/ThemeContext';
 
 const Layout = ({ children }) => {
@@ -18,24 +17,6 @@ const Layout = ({ children }) => {
             {/* Ambient Background Blobs for Premium Glass Effect */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 dark:bg-blue-900/20 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-400/20 dark:bg-purple-900/20 blur-[120px] pointer-events-none" />
-
-            {/* Pixel Blast Interactive Background */}
-            <div className="fixed inset-0 w-full h-full pointer-events-auto z-0">
-                <PixelBlast
-                    variant="square"
-                    pixelSize={3}
-                    color={isDark ? "#B19EEF" : "#6366f1"}
-                    patternScale={2}
-                    patternDensity={1}
-                    enableRipples
-                    rippleSpeed={0.3}
-                    rippleThickness={0.1}
-                    rippleIntensityScale={1}
-                    speed={0.5}
-                    transparent
-                    edgeFade={0.5}
-                />
-            </div>
 
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
