@@ -5,10 +5,13 @@
 @layer base {
   html {
     color-scheme: light;
+    background-color: white;
+    /* Prevent mobile forced dark mode bleed */
   }
 
   html.dark {
     color-scheme: dark;
+    background-color: black;
   }
 
   body {
@@ -107,18 +110,20 @@
 @layer utilities {
   .glass {
     @apply rounded-[20px] transition-all duration-300;
-    background: rgba(255, 255, 255, 0.65);
+    background-color: rgba(255, 255, 255, 0.7) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    color: var(--light-textPrimary);
   }
 
   .dark .glass {
-    background: rgba(0, 0, 0, 0.65);
+    background-color: rgba(0, 0, 0, 0.65) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: var(--dark-textPrimary);
   }
 }
