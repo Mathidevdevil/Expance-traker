@@ -5,21 +5,43 @@ import { motion } from 'framer-motion';
 
 import Clock from './Clock';
 import ThemeToggle from './ThemeToggle';
+import PixelBlast from './PixelBlast';
+import { useTheme } from '../context/ThemeContext';
 
 const Layout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
 
     return (
-        <div className="flex min-h-screen text-light-textPrimary dark:text-dark-textPrimary bg-gradient-to-br from-indigo-50 via-slate-50 to-cyan-100 dark:from-gray-950 dark:via-black dark:to-neutral-950 relative overflow-hidden transition-colors duration-300">
+        <div className="flex min-h-screen text-light-textPrimary dark:text-dark-textPrimary bg-gradient-to-br from-indigo-50 via-slate-50 to-cyan-100 dark:from-gray-950 dark:via-black dark:to-neutral-950 relative overflow-hidden transition-colors duration-300 z-0">
             {/* Ambient Background Blobs for Premium Glass Effect */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 dark:bg-blue-900/20 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-400/20 dark:bg-purple-900/20 blur-[120px] pointer-events-none" />
 
+            {/* Pixel Blast Interactive Background */}
+            <div className="fixed inset-0 w-full h-full pointer-events-auto z-0">
+                <PixelBlast
+                    variant="square"
+                    pixelSize={3}
+                    color={isDark ? "#B19EEF" : "#6366f1"}
+                    patternScale={2}
+                    patternDensity={1}
+                    enableRipples
+                    rippleSpeed={0.3}
+                    rippleThickness={0.1}
+                    rippleIntensityScale={1}
+                    speed={0.5}
+                    transparent
+                    edgeFade={0.5}
+                />
+            </div>
+
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-            <div className="flex-1 flex flex-col min-w-0 lg:ml-64 transition-all duration-300">
+            <div className="flex-1 flex flex-col min-w-0 lg:ml-64 transition-all duration-300 relative z-10 pointer-events-none">
                 {/* Header */}
-                <header className="glass rounded-none border-x-0 border-t-0 h-20 flex items-center justify-between px-6 sticky top-0 z-30">
+                <header className="glass rounded-none border-x-0 border-t-0 h-20 flex items-center justify-between px-6 sticky top-0 z-30 pointer-events-auto">
                     <div className="flex items-center">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
@@ -42,10 +64,15 @@ const Layout = ({ children }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="flex-1 p-4 lg:p-8 overflow-x-hidden relative z-10"
+                    className="flex-1 p-4 lg:p-8 overflow-x-hidden relative z-10 pointer-events-auto"
                 >
                     {children}
                 </motion.main>
+
+                {/* Footer */}
+                <footer className="py-4 text-center text-sm text-light-textSecondary dark:text-dark-textSecondary relative z-10 pointer-events-auto mt-auto">
+                    &copy; 2026 Mathi | Built with ❤️ using React
+                </footer>
             </div>
         </div>
     );
