@@ -20,9 +20,9 @@ const Layout = ({ children }) => {
 
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-            <div className="flex-1 flex flex-col min-w-0 lg:ml-64 transition-all duration-300 relative z-10 pointer-events-none">
+            <div className="flex-1 flex flex-col min-w-0 lg:ml-64 transition-all duration-300 relative z-10">
                 {/* Header */}
-                <header className="glass rounded-none border-x-0 border-t-0 h-20 flex items-center justify-between px-6 sticky top-0 z-30 pointer-events-auto">
+                <header className="glass rounded-none border-x-0 border-t-0 h-20 flex items-center justify-between px-6 sticky top-0 z-30">
                     <div className="flex items-center">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
@@ -45,13 +45,13 @@ const Layout = ({ children }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="flex-1 p-4 lg:p-8 overflow-x-hidden relative z-10 pointer-events-auto"
+                    className="flex-1 p-4 lg:p-8 overflow-x-hidden relative z-10"
                 >
                     {children}
                 </motion.main>
 
                 {/* Footer */}
-                <footer className="py-4 text-center text-sm text-light-textSecondary dark:text-dark-textSecondary relative z-10 pointer-events-auto mt-auto">
+                <footer className="py-4 text-center text-sm text-light-textSecondary dark:text-dark-textSecondary relative z-10 mt-auto">
                     &copy; 2026 Mathi | Built with ❤️ using React
                 </footer>
             </div>
