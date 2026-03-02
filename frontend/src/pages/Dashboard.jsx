@@ -1,18 +1,83 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { useGlobalContext } from '../context/GlobalContext';
 import { useAuth } from '../context/AuthContext';
 import Chart from '../components/Chart';
 import CategoryChart from '../components/CategoryChart';
-import { Wallet, TrendingUp, TrendingDown, IndianRupee, History } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, IndianRupee, History, Plus } from 'lucide-react';
 import { currencyFormat } from '../utils/formatCurrency';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import GlassCard from '../components/GlassCard';
 import AnimatedCounter from '../components/AnimatedCounter';
+import AnimatedButton from '../components/AnimatedButton';
+import TransactionModal from '../components/TransactionModal';
 
 const Dashboard = () => {
-    const { totalExpense, incomes, expenses, totalIncome, totalBalance, getIncomes, getExpenses, timeFilter, setTimeFilter } = useGlobalContext();
+    const { totalExpense, incomes, expenses, totalIncome, totalBalance, getIncomes, getExpenses, timeFilter, setTimeFilter, addIncome, addExpense, error, setError } = useGlobalContext();
     const { user } = useAuth();
+
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState('income');
+    const [isLoading, setIsLoading] = useState(false);
+    const [inputState, setInputState] = useState({
+        amount: '',
+        date: '',
+        category: '',
+        source: '',
+        description: '',
+        title: '',
+        customCategory: '',
+        customSource: '',
+    });
+
+    const handleInput = (name) => (e) => {
+        setInputState({ ...inputState, [name]: e.target.value });
+        setError(null);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            if (modalType === 'income') {
+                const payload = {
+                    amount: inputState.amount,
+                    date: inputState.date,
+                    source: inputState.source === 'others' ? inputState.customSource : inputState.source,
+                    description: inputState.title, // Backend expects 'description' instead of 'title' for both
+                };
+                await addIncome(payload);
+                toast.success('Income added successfully');
+            } else {
+                const payload = {
+                    amount: inputState.amount,
+                    date: inputState.date,
+                    category: inputState.category === 'other' ? inputState.customCategory : inputState.category,
+                    description: inputState.description,
+                };
+                await addExpense(payload);
+                toast.success('Expense added successfully');
+            }
+
+            setInputState({
+                amount: '',
+                date: '',
+                category: '',
+                source: '',
+                description: '',
+                title: '',
+                customCategory: '',
+                customSource: '',
+            });
+            setIsModalOpen(false);
+        } catch (err) {
+            // Error is handled in context
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         getIncomes();
@@ -75,6 +140,32 @@ const Dashboard = () => {
                     </select>
                 </motion.div>
             </header>
+
+            {/* Mobile Quick Add Buttons */}
+            <div className="flex gap-4 md:hidden mb-6">
+                <AnimatedButton
+                    onClick={() => {
+                        setModalType('income');
+                        setInputState({ amount: '', date: '', source: '', title: '', customSource: '' });
+                        setIsModalOpen(true);
+                    }}
+                    className="flex-1 py-3 px-4 shadow-[0_4px_12px_rgba(22,163,74,0.2)] bg-light-income dark:bg-dark-income text-white hover:opacity-90 border-transparent rounded-xl flex items-center justify-center font-bold"
+                >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Income
+                </AnimatedButton>
+                <AnimatedButton
+                    onClick={() => {
+                        setModalType('expense');
+                        setInputState({ amount: '', date: '', category: '', description: '', customCategory: '' });
+                        setIsModalOpen(true);
+                    }}
+                    className="flex-1 py-3 px-4 shadow-[0_4px_12px_rgba(220,38,38,0.2)] bg-light-expense dark:bg-dark-expense text-white hover:opacity-90 border-transparent rounded-xl flex items-center justify-center font-bold"
+                >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Expense
+                </AnimatedButton>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Total Balance */}
@@ -190,6 +281,21 @@ const Dashboard = () => {
                     </GlassCard>
                 </div>
             </div >
+
+            <TransactionModal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setError(null);
+                }}
+                onSubmit={handleSubmit}
+                type={modalType}
+                inputState={inputState}
+                handleInput={handleInput}
+                isLoading={isLoading}
+                error={error}
+                isEditing={false}
+            />
         </div >
     );
 };
