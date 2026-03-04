@@ -103,7 +103,7 @@ const AuthPage = ({ initialMode = 'login' }) => {
                     "absolute top-0 h-full transition-all duration-600 ease-in-out left-0 w-full md:w-1/2",
                     isSignUp ? "md:translate-x-full opacity-100 z-50 rounded-none md:rounded-r-2xl" : "opacity-0 z-10 pointer-events-none"
                 )}>
-                    <form onSubmit={handleRegister} className="bg-white dark:bg-[#1F1B3A] flex flex-col items-center justify-center h-full px-8 md:px-10 text-center transition-colors duration-300">
+                    <form onSubmit={handleRegister} className="bg-white dark:bg-[#1F1B3A] flex flex-col items-center justify-center h-full px-8 md:px-10 text-center transition-colors duration-300 relative">
                         <h1 className="font-bold text-3xl mb-4 text-slate-800 dark:text-white">Create Account</h1>
 
                         <span className="text-xs text-slate-500 dark:text-slate-400 mb-4">or use your email for registration</span>
@@ -134,6 +134,12 @@ const AuthPage = ({ initialMode = 'login' }) => {
                                 Already have an account? <button type="button" onClick={() => setIsSignUp(false)} className="text-[#7C3AED] font-bold hover:underline">Sign In</button>
                             </p>
                         </div>
+
+                        <div className="absolute bottom-6 left-0 w-full text-center pointer-events-none">
+                            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium tracking-wide">
+                                Built by Mathi
+                            </p>
+                        </div>
                     </form>
                 </div>
 
@@ -142,7 +148,7 @@ const AuthPage = ({ initialMode = 'login' }) => {
                     "absolute top-0 h-full transition-all duration-600 ease-in-out left-0 w-full md:w-1/2 z-20",
                     isSignUp ? "md:translate-x-full opacity-0 pointer-events-none" : "opacity-100"
                 )}>
-                    <form onSubmit={handleLogin} className="bg-white dark:bg-[#1F1B3A] flex flex-col items-center justify-center h-full px-10 text-center transition-colors duration-300">
+                    <form onSubmit={handleLogin} className="bg-white dark:bg-[#1F1B3A] flex flex-col items-center justify-center h-full px-10 text-center transition-colors duration-300 relative">
                         <h1 className="font-bold text-3xl mb-4 text-slate-800 dark:text-white">Sign in</h1>
 
                         <span className="text-xs text-slate-500 dark:text-slate-400 mb-4">or use your account</span>
@@ -165,6 +171,12 @@ const AuthPage = ({ initialMode = 'login' }) => {
                         <div className="mt-4 md:hidden">
                             <p className="text-sm text-slate-600 dark:text-slate-400">
                                 Don't have an account? <button type="button" onClick={() => setIsSignUp(true)} className="text-[#7C3AED] font-bold hover:underline">Sign Up</button>
+                            </p>
+                        </div>
+
+                        <div className="absolute bottom-6 left-0 w-full text-center pointer-events-none">
+                            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium tracking-wide">
+                                Built by Mathi
                             </p>
                         </div>
                     </form>
@@ -203,10 +215,6 @@ const AuthPage = ({ initialMode = 'login' }) => {
                     </div>
                 </div>
 
-            </div>
-
-            <div className="mt-8 text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide">
-                Built by Mathi
             </div>
         </div>
     );
