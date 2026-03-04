@@ -204,6 +204,10 @@ const AuthPage = ({ initialMode = 'login' }) => {
                 </div>
 
             </div>
+
+            <div className="mt-8 text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+                Built by Mathi
+            </div>
         </div>
     );
 };
