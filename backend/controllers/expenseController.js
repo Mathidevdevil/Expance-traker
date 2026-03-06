@@ -42,9 +42,9 @@ const getExpenses = async (req, res) => {
 // @access  Private
 const addExpense = async (req, res) => {
     try {
-        const { amount, category, description, date } = req.body;
+        const { amount, category, description, date, paymentMethod } = req.body;
 
-        if (!amount || !category || !description) {
+        if (!amount || !category || !description || !paymentMethod) {
             return res.status(400).json({ message: 'Please add all fields' });
         }
 
@@ -53,6 +53,7 @@ const addExpense = async (req, res) => {
             amount,
             category,
             description,
+            paymentMethod,
             date: date || Date.now()
         });
 
