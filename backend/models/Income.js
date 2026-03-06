@@ -22,11 +22,6 @@ const incomeSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    paymentMethod: {
-        type: String,
-        required: [true, 'Please select a payment method'],
-        enum: ['UPI (GPay, PhonePay)', 'Cash', 'Netbanking']
-    },
     createdAt: {
         type: Date,
         default: Date.now
