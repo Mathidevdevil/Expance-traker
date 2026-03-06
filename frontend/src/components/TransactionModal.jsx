@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Tag, IndianRupee, Calendar } from 'lucide-react';
+import { X, Tag, IndianRupee, Calendar, CreditCard } from 'lucide-react';
 import GlassCard from './GlassCard';
 
 const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleInput, isLoading, error, isEditing = false }) => {
@@ -102,6 +102,21 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                                                 <option value="other">Other</option>
                                             </>
                                         )}
+                                    </select>
+                                </div>
+
+                                <div className="relative">
+                                    <CreditCard className="w-5 h-5 text-light-textSecondary dark:text-dark-textSecondary absolute left-3 top-2.5 pointer-events-none" />
+                                    <select
+                                        value={inputState.paymentMethod || ''}
+                                        onChange={handleInput('paymentMethod')}
+                                        className="w-full pl-10 px-4 py-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-light-primary dark:focus:ring-dark-primary transition-all"
+                                        required
+                                    >
+                                        <option value="" disabled>Select Payment Method</option>
+                                        <option value="UPI (GPay, PhonePay)">UPI (GPay, PhonePay)</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Netbanking">Netbanking</option>
                                     </select>
                                 </div>
 

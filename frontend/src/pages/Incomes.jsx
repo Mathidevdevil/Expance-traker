@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { useGlobalContext } from '../context/GlobalContext';
-import { Trash2, Calendar, IndianRupee, Tag, Plus, Pencil } from 'lucide-react';
+import { Trash2, Calendar, IndianRupee, Tag, Plus, Pencil, CreditCard } from 'lucide-react';
 import { currencyFormat } from '../utils/formatCurrency';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -26,6 +26,7 @@ const Incomes = () => {
         source: '',
         title: '',
         customSource: '',
+        paymentMethod: '',
     });
 
     const handleInput = (name) => (e) => {
@@ -51,6 +52,7 @@ const Incomes = () => {
             source: sourceValue.toLowerCase(),
             title: income.title,
             customSource: customSourceValue,
+            paymentMethod: income.paymentMethod || '',
         });
         setIsModalOpen(true);
     };
@@ -65,6 +67,7 @@ const Incomes = () => {
                 date: inputState.date,
                 source: inputState.source === 'others' ? inputState.customSource : inputState.source,
                 description: inputState.title,
+                paymentMethod: inputState.paymentMethod,
             };
 
             if (editingId) {
@@ -81,6 +84,7 @@ const Incomes = () => {
                 source: '',
                 title: '',
                 customSource: '',
+                paymentMethod: '',
             });
             setIsModalOpen(false);
             setEditingId(null);
@@ -148,7 +152,7 @@ const Incomes = () => {
                     <AnimatedButton
                         onClick={() => {
                             setEditingId(null);
-                            setInputState({ amount: '', date: '', source: '', title: '', customSource: '' });
+                            setInputState({ amount: '', date: '', source: '', title: '', customSource: '', paymentMethod: '' });
                             setIsModalOpen(true);
                         }}
                         className="w-full sm:w-auto px-6 py-4 shadow-[0_4px_12px_rgba(22,163,74,0.2)] bg-light-income dark:bg-dark-income text-white hover:opacity-90 border-transparent"
@@ -206,6 +210,9 @@ const Incomes = () => {
                                                     <span className="flex items-center whitespace-nowrap"><IndianRupee className="w-4 h-4 mr-1" /> {income.amount}</span>
                                                     <span className="flex items-center whitespace-nowrap"><Calendar className="w-4 h-4 mr-1" /> {moment(income.date).format('DD MMM YYYY')}</span>
                                                     <span className="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full text-xs text-light-textPrimary dark:text-dark-textSecondary capitalize whitespace-nowrap">{income.source || 'Other'}</span>
+                                                    {income.paymentMethod && (
+                                                        <span className="flex items-center whitespace-nowrap"><CreditCard className="w-4 h-4 mr-1" /> {income.paymentMethod}</span>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
