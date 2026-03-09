@@ -30,6 +30,7 @@ const Dashboard = () => {
         title: '',
         customCategory: '',
         customSource: '',
+        paymentMethod: '',
     });
 
     const handleInput = (name) => (e) => {
@@ -56,6 +57,7 @@ const Dashboard = () => {
                     date: inputState.date,
                     category: inputState.category === 'other' ? inputState.customCategory : inputState.category,
                     description: inputState.description,
+                    paymentMethod: inputState.paymentMethod,
                 };
                 await addExpense(payload);
                 toast.success('Expense added successfully');
@@ -70,6 +72,7 @@ const Dashboard = () => {
                 title: '',
                 customCategory: '',
                 customSource: '',
+                paymentMethod: '',
             });
             setIsModalOpen(false);
         } catch (err) {
@@ -157,7 +160,7 @@ const Dashboard = () => {
                 <AnimatedButton
                     onClick={() => {
                         setModalType('expense');
-                        setInputState({ amount: '', date: '', category: '', description: '', customCategory: '' });
+                        setInputState({ amount: '', date: '', category: '', description: '', customCategory: '', paymentMethod: '' });
                         setIsModalOpen(true);
                     }}
                     className="flex-1 py-3 px-4 shadow-[0_4px_12px_rgba(220,38,38,0.2)] bg-light-expense dark:bg-dark-expense text-white hover:opacity-90 border-transparent rounded-xl flex items-center justify-center font-bold"
