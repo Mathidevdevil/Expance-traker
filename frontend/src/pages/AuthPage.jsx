@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
 const AuthPage = ({ initialMode = 'login' }) => {
     const [isSignUp, setIsSignUp] = useState(initialMode === 'register');
@@ -113,25 +114,32 @@ const AuthPage = ({ initialMode = 'login' }) => {
 
                         <div className="relative w-full my-2">
                             <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" value={password} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all pr-10" />
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
                                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                            </button>
+                            </motion.button>
                         </div>
 
                         <div className="relative w-full my-2">
                             <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password" value={confirmPassword} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all pr-10" />
-                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
                                 {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                            </button>
+                            </motion.button>
                         </div>
 
-                        <button disabled={isLoading} className="mt-4 rounded-full border border-blue-600 bg-[#7C3AED] text-white font-bold text-xs py-3 px-11 uppercase tracking-wider hover:bg-[#6D28D9] transition-transform active:scale-95 shadow-md flex items-center justify-center">
-                            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign Up'}
-                        </button>
+                        <motion.button
+                            disabled={isLoading}
+                            whileHover={!isLoading ? { scale: 1.06, y: -3 } : {}}
+                            whileTap={!isLoading ? { scale: 0.96 } : {}}
+                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            className="mt-4 rounded-full border border-blue-600 bg-[#7C3AED] text-white font-bold text-xs py-3 px-11 uppercase tracking-wider hover:bg-[#6D28D9] hover:shadow-[0_8px_25px_rgba(124,58,237,0.5)] transition-all shadow-md flex items-center justify-center relative overflow-hidden"
+                        >
+                            <motion.span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full" whileHover={{ translateX: '200%' }} transition={{ duration: 0.5 }} />
+                            <span className="relative z-10">{isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign Up'}</span>
+                        </motion.button>
 
                         <div className="mt-4 md:hidden">
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                                Already have an account? <button type="button" onClick={() => setIsSignUp(false)} className="text-[#7C3AED] font-bold hover:underline">Sign In</button>
+                                Already have an account? <motion.button type="button" onClick={() => setIsSignUp(false)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-[#7C3AED] font-bold hover:underline transition-all">Sign In</motion.button>
                             </p>
                         </div>
 
@@ -157,20 +165,27 @@ const AuthPage = ({ initialMode = 'login' }) => {
 
                         <div className="relative w-full my-2">
                             <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" value={password} onChange={handleChange} required className="bg-slate-100 dark:bg-[#24243E] border-none px-4 py-3 w-full rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B82F6] dark:focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all pr-10" />
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
                                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                            </button>
+                            </motion.button>
                         </div>
 
                         <a href="#" className="text-slate-500 dark:text-slate-400 text-sm my-4 hover:text-slate-800 dark:hover:text-white transition-colors">Forgot your password?</a>
 
-                        <button disabled={isLoading} className="rounded-full border border-blue-600 bg-[#7C3AED] text-white font-bold text-xs py-3 px-11 uppercase tracking-wider hover:bg-[#6D28D9] transition-transform active:scale-95 shadow-md flex items-center justify-center">
-                            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign In'}
-                        </button>
+                        <motion.button
+                            disabled={isLoading}
+                            whileHover={!isLoading ? { scale: 1.06, y: -3 } : {}}
+                            whileTap={!isLoading ? { scale: 0.96 } : {}}
+                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            className="rounded-full border border-blue-600 bg-[#7C3AED] text-white font-bold text-xs py-3 px-11 uppercase tracking-wider hover:bg-[#6D28D9] hover:shadow-[0_8px_25px_rgba(124,58,237,0.5)] transition-all shadow-md flex items-center justify-center relative overflow-hidden"
+                        >
+                            <motion.span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full" whileHover={{ translateX: '200%' }} transition={{ duration: 0.5 }} />
+                            <span className="relative z-10">{isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign In'}</span>
+                        </motion.button>
 
                         <div className="mt-4 md:hidden">
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                                Don't have an account? <button type="button" onClick={() => setIsSignUp(true)} className="text-[#7C3AED] font-bold hover:underline">Sign Up</button>
+                                Don't have an account? <motion.button type="button" onClick={() => setIsSignUp(true)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-[#7C3AED] font-bold hover:underline transition-all">Sign Up</motion.button>
                             </p>
                         </div>
 
@@ -198,9 +213,9 @@ const AuthPage = ({ initialMode = 'login' }) => {
                         )}>
                             <h1 className="font-bold text-3xl mb-4">Welcome Back!</h1>
                             <p className="text-sm px-8 mb-8">To keep connected with us please login with your personal info</p>
-                            <button onClick={() => setIsSignUp(false)} className="bg-transparent border border-white text-white rounded-full font-bold text-xs py-3 px-10 uppercase tracking-wider transition-transform active:scale-95 hover:bg-white/10">
+                            <motion.button whileHover={{ scale: 1.06, y: -2, backgroundColor: 'rgba(255,255,255,0.15)' }} whileTap={{ scale: 0.95 }} onClick={() => setIsSignUp(false)} className="bg-transparent border border-white text-white rounded-full font-bold text-xs py-3 px-10 uppercase tracking-wider transition-all hover:shadow-[0_4px_15px_rgba(255,255,255,0.2)]">
                                 Sign In
-                            </button>
+                            </motion.button>
                         </div>
                         <div className={clsx(
                             "absolute right-0 flex items-center justify-center flex-col p-10 text-center top-0 h-full w-1/2 transform transition-transform duration-600 ease-in-out",
@@ -208,9 +223,9 @@ const AuthPage = ({ initialMode = 'login' }) => {
                         )}>
                             <h1 className="font-bold text-3xl mb-4">Hello, Friend!</h1>
                             <p className="text-sm px-8 mb-8">Enter your personal details and start journey with us</p>
-                            <button onClick={() => setIsSignUp(true)} className="bg-transparent border border-white text-white rounded-full font-bold text-xs py-3 px-10 uppercase tracking-wider transition-transform active:scale-95 hover:bg-white/10">
+                            <motion.button whileHover={{ scale: 1.06, y: -2, backgroundColor: 'rgba(255,255,255,0.15)' }} whileTap={{ scale: 0.95 }} onClick={() => setIsSignUp(true)} className="bg-transparent border border-white text-white rounded-full font-bold text-xs py-3 px-10 uppercase tracking-wider transition-all hover:shadow-[0_4px_15px_rgba(255,255,255,0.2)]">
                                 Sign Up
-                            </button>
+                            </motion.button>
                         </div>
                     </div>
                 </div>

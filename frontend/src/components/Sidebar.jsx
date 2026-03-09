@@ -49,9 +49,15 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <h1 className="text-xl font-bold text-light-primary dark:text-dark-primary">
                         ExpenseTracker
                     </h1>
-                    <button onClick={onClose} className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary absolute right-4">
+                    <motion.button
+                        onClick={onClose}
+                        whileHover={{ scale: 1.15, rotate: 90 }}
+                        whileTap={{ scale: 0.9 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 p-1.5 rounded-full transition-colors absolute right-4"
+                    >
                         <X className="w-6 h-6" />
-                    </button>
+                    </motion.button>
                 </div>
 
                 <div className="p-6 flex flex-col flex-1 overflow-y-auto">
@@ -71,19 +77,19 @@ const Sidebar = ({ isOpen, onClose }) => {
                             let activeIconColor = item.color;
 
                             return (
-                                <motion.div key={item.path} whileHover={{ x: 5 }} whileTap={{ scale: 0.98 }}>
+                                <motion.div key={item.path} whileHover={{ x: 6 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 400, damping: 22 }}>
                                     <Link
                                         to={item.path}
                                         className={clsx(
-                                            'flex items-center px-4 py-3.5 text-sm font-medium rounded-xl transition-all',
+                                            'flex items-center px-4 py-3.5 text-sm font-medium rounded-xl transition-all duration-200',
                                             isActive(item.path)
-                                                ? 'bg-light-primary/10 dark:bg-dark-primary/10 text-light-primary dark:text-dark-primary font-bold'
-                                                : 'text-light-textSecondary dark:text-dark-textSecondary hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
+                                                ? 'bg-light-primary/10 dark:bg-dark-primary/10 text-light-primary dark:text-dark-primary font-bold shadow-sm'
+                                                : 'text-light-textSecondary dark:text-dark-textSecondary hover:bg-black/5 dark:hover:bg-white/5 border border-transparent hover:border-white/20 dark:hover:border-white/10 hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:shadow-sm'
                                         )}
                                     >
                                         <Icon
-                                            className="w-5 h-5 mr-3 shrink-0"
-                                            style={{ color: isActive(item.path) ? '' : 'inherit' }}
+                                            className="w-5 h-5 mr-3 shrink-0 transition-colors duration-200"
+                                            style={{ color: isActive(item.path) ? activeIconColor : 'inherit' }}
                                         />
                                         {item.label}
                                     </Link>

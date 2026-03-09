@@ -27,12 +27,15 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message, confirm
                                 isDestructive ? "bg-red-500" : "bg-blue-500"
                             )}></div>
 
-                            <button
+                            <motion.button
                                 onClick={onClose}
-                                className="absolute top-4 right-4 p-2 text-light-textSecondary hover:text-light-textPrimary dark:text-dark-textSecondary dark:hover:text-dark-textPrimary transition-colors"
+                                whileHover={{ scale: 1.15, rotate: 90 }}
+                                whileTap={{ scale: 0.9 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                className="absolute top-4 right-4 p-2 text-light-textSecondary hover:text-light-textPrimary dark:text-dark-textSecondary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors"
                             >
                                 <X className="w-5 h-5" />
-                            </button>
+                            </motion.button>
 
                             <div className={clsx(
                                 "w-16 h-16 rounded-full flex items-center justify-center mb-4 mt-2",
@@ -49,26 +52,32 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message, confirm
                             </p>
 
                             <div className="flex w-full gap-3">
-                                <button
+                                <motion.button
                                     onClick={onClose}
-                                    className="flex-1 py-2.5 px-4 rounded-xl font-semibold border border-light-border dark:border-dark-border text-light-textPrimary dark:text-dark-textPrimary hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                    whileHover={{ scale: 1.04, y: -1 }}
+                                    whileTap={{ scale: 0.96 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                    className="flex-1 py-2.5 px-4 rounded-xl font-semibold border border-light-border dark:border-dark-border text-light-textPrimary dark:text-dark-textPrimary hover:bg-black/5 dark:hover:bg-white/5 hover:border-light-primary/40 dark:hover:border-dark-primary/40 transition-all"
                                 >
                                     {cancelText}
-                                </button>
-                                <button
+                                </motion.button>
+                                <motion.button
                                     onClick={() => {
                                         onConfirm();
                                         onClose();
                                     }}
+                                    whileHover={{ scale: 1.04, y: -1 }}
+                                    whileTap={{ scale: 0.96 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                                     className={clsx(
-                                        "flex-1 py-2.5 px-4 rounded-xl font-semibold text-white transition-all shadow-md",
+                                        "flex-1 py-2.5 px-4 rounded-xl font-semibold text-white transition-all shadow-md relative overflow-hidden",
                                         isDestructive
-                                            ? "bg-red-500 hover:bg-red-600 hover:shadow-red-500/25"
-                                            : "bg-blue-500 hover:bg-blue-600 hover:shadow-blue-500/25"
+                                            ? "bg-red-500 hover:bg-red-600 hover:shadow-[0_6px_20px_rgba(239,68,68,0.4)]"
+                                            : "bg-blue-500 hover:bg-blue-600 hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)]"
                                     )}
                                 >
                                     {confirmText}
-                                </button>
+                                </motion.button>
                             </div>
                         </motion.div>
                     </div>

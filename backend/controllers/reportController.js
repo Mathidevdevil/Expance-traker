@@ -34,27 +34,45 @@ const generateExcelBuffer = async (userId, month, year) => {
 
     // Create Workbook
     const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'ExpenseTracker';
+    workbook.created = new Date();
+
     const worksheet = workbook.addWorksheet('Monthly Report');
 
-    // Columns
+    // Columns with explicit widths
     worksheet.columns = [
-        { header: 'Date', key: 'date', width: 15 },
+        { header: 'Date', key: 'date', width: 14 },
         { header: 'Type', key: 'type', width: 10 },
-        { header: 'Category/Source', key: 'category', width: 20 },
-        { header: 'Description', key: 'description', width: 30 },
-        { header: 'Amount', key: 'amount', width: 15 },
-        { header: 'Balance', key: 'balance', width: 15 }
+        { header: 'Category/Source', key: 'category', width: 22 },
+        { header: 'Description', key: 'description', width: 32 },
+        { header: 'Payment Method', key: 'payMethod', width: 22 },
+        { header: 'Amount (INR)', key: 'amount', width: 16 },
+        { header: 'Balance (INR)', key: 'balance', width: 16 },
     ];
 
+    // Style the header row
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true, size: 12, color: { argb: 'FFFFFFFF' } };
+    headerRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF3B82F6' }, // blue
+    };
+    headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+    headerRow.height = 22;
+
     // Add Opening Balance Row
-    worksheet.addRow({
+    const openingRow = worksheet.addRow({
         date: startOfMonth.toISOString().split('T')[0],
         type: 'Opening',
         category: '-',
         description: 'Opening Balance',
+        payMethod: '-',
         amount: '-',
-        balance: currentBalance
+        balance: currentBalance,
     });
+    openingRow.font = { italic: true, color: { argb: 'FF6B7280' } };
+    openingRow.getCell('balance').numFmt = '₹#,##0.00';
 
     // Add Transactions
     transactions.forEach(txn => {
@@ -64,14 +82,54 @@ const generateExcelBuffer = async (userId, month, year) => {
             currentBalance -= txn.amount;
         }
 
-        worksheet.addRow({
-            date: txn.date.toISOString().split('T')[0],
+        const row = worksheet.addRow({
+            date: new Date(txn.date).toISOString().split('T')[0],
             type: txn.type,
-            category: txn.category || txn.source,
-            description: txn.description,
+            category: txn.category || txn.source || '-',
+            description: txn.description || '-',
+            payMethod: txn.paymentMethod || '-',
             amount: txn.amount,
-            balance: currentBalance
+            balance: currentBalance,
         });
+
+        // Color-code income vs expense
+        const isIncome = txn.type === 'Income';
+        row.getCell('type').font = {
+            bold: true,
+            color: { argb: isIncome ? 'FF16A34A' : 'FFDC2626' },
+        };
+        row.getCell('amount').font = {
+            color: { argb: isIncome ? 'FF16A34A' : 'FFDC2626' },
+        };
+        row.getCell('amount').numFmt = '₹#,##0.00';
+        row.getCell('balance').numFmt = '₹#,##0.00';
+
+        // Alternate row background  
+        if (row.number % 2 === 0) {
+            row.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFF9FAFB' },
+            };
+        }
+    });
+
+    // Add Summary section at the bottom
+    worksheet.addRow([]);
+    const totalIncome = transactions.filter(t => t.type === 'Income').reduce((s, t) => s + t.amount, 0);
+    const totalExpense = transactions.filter(t => t.type === 'Expense').reduce((s, t) => s + t.amount, 0);
+
+    const summaryRows = [
+        ['Total Income', totalIncome],
+        ['Total Expense', totalExpense],
+        ['Net Savings', totalIncome - totalExpense],
+    ];
+
+    summaryRows.forEach(([label, value]) => {
+        const sRow = worksheet.addRow({ description: label, balance: value });
+        sRow.getCell('description').font = { bold: true };
+        sRow.getCell('balance').font = { bold: true, color: { argb: value >= 0 ? 'FF16A34A' : 'FFDC2626' } };
+        sRow.getCell('balance').numFmt = '₹#,##0.00';
     });
 
     return await workbook.xlsx.writeBuffer();
@@ -89,10 +147,13 @@ const downloadReport = async (req, res) => {
 
         const buffer = await generateExcelBuffer(req.user._id, month, year);
 
-        const fileName = `Expense_Report_${year}_${month}.xlsx`;
+        const fileName = `Expense_Report_${year}_${String(month).padStart(2, '0')}.xlsx`;
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+        res.setHeader('Content-Length', buffer.length);
+        // Allow Android/mobile apps to download across origins
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
 
         res.send(buffer);
     } catch (error) {

@@ -25,12 +25,15 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                         className="relative w-full max-w-md"
                     >
                         <GlassCard className="p-8">
-                            <button
+                            <motion.button
                                 onClick={onClose}
-                                className="absolute top-4 right-4 text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary transition-colors"
+                                whileHover={{ scale: 1.15, rotate: 90 }}
+                                whileTap={{ scale: 0.9 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                                className="absolute top-4 right-4 p-2 text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors"
                             >
                                 <X className="w-5 h-5" />
-                            </button>
+                            </motion.button>
 
                             <h2 className="text-2xl font-bold text-light-textPrimary dark:text-dark-textPrimary mb-6">
                                 {isEditing ? 'Edit' : 'Add'} {type === 'income' ? 'Income' : 'Expense'}
@@ -145,17 +148,31 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                                 </AnimatePresence>
 
                                 <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    whileHover={!isLoading ? { scale: 1.04, y: -2 } : {}}
+                                    whileTap={!isLoading ? { scale: 0.97, y: 0 } : {}}
+                                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
                                     disabled={isLoading}
-                                    className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-lg flex items-center justify-center transition-opacity hover:opacity-90 ${type === 'income' ? 'bg-light-income dark:bg-dark-income' : 'bg-light-expense dark:bg-dark-expense'
+                                    className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-lg flex items-center justify-center transition-all relative overflow-hidden
+                                        ${type === 'income'
+                                            ? 'bg-light-income dark:bg-dark-income hover:shadow-[0_8px_25px_rgba(16,185,129,0.45)] hover:brightness-110'
+                                            : 'bg-light-expense dark:bg-dark-expense hover:shadow-[0_8px_25px_rgba(244,63,94,0.45)] hover:brightness-110'
                                         }`}
                                 >
-                                    {isLoading ? (
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    ) : (
-                                        `${isEditing ? 'Update' : 'Add'} ${type === 'income' ? 'Income' : 'Expense'}`
+                                    {/* Shimmer */}
+                                    {!isLoading && (
+                                        <motion.span
+                                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
+                                            whileHover={{ translateX: '200%' }}
+                                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                                        />
                                     )}
+                                    <span className="relative z-10 flex items-center">
+                                        {isLoading ? (
+                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        ) : (
+                                            `${isEditing ? 'Update' : 'Add'} ${type === 'income' ? 'Income' : 'Expense'}`
+                                        )}
+                                    </span>
                                 </motion.button>
                             </form>
                         </GlassCard>

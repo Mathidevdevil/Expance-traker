@@ -42,8 +42,11 @@ const Profile = () => {
                 }
             });
 
-            // Create download link
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+            // Create download link — explicit MIME type is required for Android to open the file correctly
+            const blob = new Blob([response.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', `Expense_Report_${year}_${month}.xlsx`);
