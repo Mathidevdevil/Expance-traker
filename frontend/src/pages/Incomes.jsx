@@ -26,6 +26,7 @@ const Incomes = () => {
         source: '',
         title: '',
         customSource: '',
+        paymentMethod: '',
     });
 
     const handleInput = (name) => (e) => {
@@ -49,8 +50,9 @@ const Incomes = () => {
             amount: income.amount,
             date: income.date ? moment(income.date).format('YYYY-MM-DD') : '',
             source: sourceValue.toLowerCase(),
-            title: income.title,
+            title: income.title || income.description || '',
             customSource: customSourceValue,
+            paymentMethod: income.paymentMethod || '',
         });
         setIsModalOpen(true);
     };
@@ -65,6 +67,7 @@ const Incomes = () => {
                 date: inputState.date,
                 source: inputState.source === 'others' ? inputState.customSource : inputState.source,
                 description: inputState.title,
+                paymentMethod: inputState.paymentMethod,
             };
 
             if (editingId) {
@@ -81,6 +84,7 @@ const Incomes = () => {
                 source: '',
                 title: '',
                 customSource: '',
+                paymentMethod: '',
             });
             setIsModalOpen(false);
             setEditingId(null);
@@ -111,9 +115,10 @@ const Incomes = () => {
     const sortedIncomes = [...incomes].sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const filteredIncomes = sortedIncomes.filter(income =>
-        income.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (income.title || income.description)?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         income.source?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         income.amount?.toString().includes(searchQuery)
+
     );
 
     return (
@@ -148,7 +153,7 @@ const Incomes = () => {
                     <AnimatedButton
                         onClick={() => {
                             setEditingId(null);
-                            setInputState({ amount: '', date: '', source: '', title: '', customSource: '' });
+                            setInputState({ amount: '', date: '', source: '', title: '', customSource: '', paymentMethod: '' });
                             setIsModalOpen(true);
                         }}
                         className="w-full sm:w-auto px-6 py-4 shadow-[0_4px_12px_rgba(22,163,74,0.2)] bg-light-income dark:bg-dark-income text-white hover:opacity-90 border-transparent"
@@ -200,12 +205,18 @@ const Incomes = () => {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <h4 className="font-bold text-light-textPrimary dark:text-dark-textPrimary truncate text-lg">
-                                                    {income.title}
+                                                    {income.title || income.description}
                                                 </h4>
                                                 <div className="flex flex-wrap items-center text-sm text-light-textSecondary dark:text-dark-textSecondary gap-3 sm:gap-5 mt-1">
                                                     <span className="flex items-center whitespace-nowrap"><IndianRupee className="w-4 h-4 mr-1" /> {income.amount}</span>
                                                     <span className="flex items-center whitespace-nowrap"><Calendar className="w-4 h-4 mr-1" /> {moment(income.date).format('DD MMM YYYY')}</span>
                                                     <span className="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full text-xs text-light-textPrimary dark:text-dark-textSecondary capitalize whitespace-nowrap">{income.source || 'Other'}</span>
+                                                    {income.paymentMethod && (
+                                                        <span className={`flex items-center whitespace-nowrap px-2 py-0.5 rounded-full text-xs font-semibold ${income.paymentMethod === 'Cash' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400'}`}>
+                                                            <CreditCard className="w-3 h-3 mr-1" />
+                                                            {income.paymentMethod === 'Cash' ? 'Hard Cash' : 'Online Payment'}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>

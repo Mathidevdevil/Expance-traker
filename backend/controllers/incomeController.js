@@ -42,9 +42,9 @@ const getIncomes = async (req, res) => {
 // @access  Private
 const addIncome = async (req, res) => {
     try {
-        const { amount, source, description, date } = req.body;
+        const { amount, source, description, date, paymentMethod } = req.body;
 
-        if (!amount || !source || !description) {
+        if (!amount || !source || !description || !paymentMethod) {
             return res.status(400).json({ message: 'Please add all fields' });
         }
 
@@ -53,6 +53,7 @@ const addIncome = async (req, res) => {
             amount,
             source,
             description,
+            paymentMethod,
             date: date || Date.now()
         });
 

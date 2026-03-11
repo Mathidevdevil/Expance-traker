@@ -4,7 +4,8 @@ import { useGlobalContext } from '../context/GlobalContext';
 import { useAuth } from '../context/AuthContext';
 import Chart from '../components/Chart';
 import CategoryChart from '../components/CategoryChart';
-import { Wallet, TrendingUp, TrendingDown, IndianRupee, History, Plus } from 'lucide-react';
+import PaymentMethodChart from '../components/PaymentMethodChart';
+import { Wallet, TrendingUp, TrendingDown, IndianRupee, History, Plus, Banknote, CreditCard } from 'lucide-react';
 import { currencyFormat } from '../utils/formatCurrency';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -14,13 +15,14 @@ import AnimatedButton from '../components/AnimatedButton';
 import TransactionModal from '../components/TransactionModal';
 
 const Dashboard = () => {
-    const { totalExpense, incomes, expenses, totalIncome, totalBalance, getIncomes, getExpenses, timeFilter, setTimeFilter, addIncome, addExpense, error, setError } = useGlobalContext();
+    const { totalExpense, incomes, expenses, totalIncome, totalBalance, hardCashBalance, onlineBalance, getIncomes, getExpenses, timeFilter, setTimeFilter, addIncome, addExpense, error, setError } = useGlobalContext();
     const { user } = useAuth();
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState('income');
     const [isLoading, setIsLoading] = useState(false);
+    const [chartTab, setChartTab] = useState('income-expense'); // 'income-expense' | 'payment-method'
     const [inputState, setInputState] = useState({
         amount: '',
         date: '',
@@ -48,6 +50,7 @@ const Dashboard = () => {
                     date: inputState.date,
                     source: inputState.source === 'others' ? inputState.customSource : inputState.source,
                     description: inputState.title, // Backend expects 'description' instead of 'title' for both
+                    paymentMethod: inputState.paymentMethod,
                 };
                 await addIncome(payload);
                 toast.success('Income added successfully');
@@ -170,9 +173,10 @@ const Dashboard = () => {
                 </AnimatedButton>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Stats Grid — 5 cards: Balance · Income · Expense · Hard Cash · Online */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Total Balance */}
-                <GlassCard className="flex flex-col relative overflow-hidden group">
+                <GlassCard className="flex flex-col relative overflow-hidden group sm:col-span-2 lg:col-span-1">
                     <div className="flex items-center gap-4 mb-4 relative z-10 w-full justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-light-primary/10 dark:bg-dark-primary/20 flex items-center justify-center text-light-primary dark:text-dark-primary border border-light-primary/20 dark:border-dark-primary/30">
@@ -224,13 +228,76 @@ const Dashboard = () => {
                         ₹<AnimatedCounter value={totalExpense || 0} />
                     </p>
                 </GlassCard>
+
+                {/* Hard Cash Balance */}
+                <GlassCard className="flex flex-col relative overflow-hidden group">
+                    <div className="flex items-center gap-4 mb-4 relative z-10 w-full justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-amber-500/10 dark:bg-amber-400/20 flex items-center justify-center text-amber-600 dark:text-amber-400 border border-amber-500/20 dark:border-amber-400/30">
+                                <Banknote className="w-6 h-6" />
+                            </div>
+                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Hard Cash</h2>
+                        </div>
+                        <span className="text-xs font-semibold px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                            💵 Cash
+                        </span>
+                    </div>
+                    <p className="text-3xl lg:text-4xl font-black text-amber-600 dark:text-amber-400 relative z-10">
+                        ₹<AnimatedCounter value={hardCashBalance || 0} />
+                    </p>
+                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mt-1">Net cash balance</p>
+                </GlassCard>
+
+                {/* Online Balance */}
+                <GlassCard className="flex flex-col relative overflow-hidden group">
+                    <div className="flex items-center gap-4 mb-4 relative z-10 w-full justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-violet-500/10 dark:bg-violet-400/20 flex items-center justify-center text-violet-600 dark:text-violet-400 border border-violet-500/20 dark:border-violet-400/30">
+                                <CreditCard className="w-6 h-6" />
+                            </div>
+                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Online</h2>
+                        </div>
+                        <span className="text-xs font-semibold px-2 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400">
+                            💳 UPI / Net
+                        </span>
+                    </div>
+                    <p className="text-3xl lg:text-4xl font-black text-violet-600 dark:text-violet-400 relative z-10">
+                        ₹<AnimatedCounter value={onlineBalance || 0} />
+                    </p>
+                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mt-1">Net online balance</p>
+                </GlassCard>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <GlassCard className="lg:col-span-2">
-                    <h3 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary mb-6">Income vs Expense</h3>
+                    {/* Chart tab switcher */}
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">
+                            {chartTab === 'income-expense' ? 'Income vs Expense' : 'Cash vs Online'}
+                        </h3>
+                        <div className="flex gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-xl">
+                            <button
+                                onClick={() => setChartTab('income-expense')}
+                                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${chartTab === 'income-expense'
+                                        ? 'bg-white dark:bg-white/10 text-light-textPrimary dark:text-dark-textPrimary shadow-sm'
+                                        : 'text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary'
+                                    }`}
+                            >
+                                📊 In vs Out
+                            </button>
+                            <button
+                                onClick={() => setChartTab('payment-method')}
+                                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${chartTab === 'payment-method'
+                                        ? 'bg-white dark:bg-white/10 text-light-textPrimary dark:text-dark-textPrimary shadow-sm'
+                                        : 'text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary'
+                                    }`}
+                            >
+                                💳 Cash vs Online
+                            </button>
+                        </div>
+                    </div>
                     <div className="flex-1 w-full h-[300px]">
-                        <Chart />
+                        {chartTab === 'income-expense' ? <Chart /> : <PaymentMethodChart />}
                     </div>
                 </GlassCard>
 
@@ -265,11 +332,21 @@ const Dashboard = () => {
                                         >
                                             <div className="flex-1 min-w-0 mr-0 sm:mr-4">
                                                 <p className="font-semibold text-light-textPrimary dark:text-dark-textPrimary truncate">
-                                                    {title || description}
+                                                    {item.title || item.description}
                                                 </p>
-                                                <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mt-0.5">
-                                                    {item.date ? moment(item.date).format('DD MMM YYYY') : ''}
-                                                </p>
+                                                <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                                                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary">
+                                                        {item.date ? moment(item.date).format('DD MMM YYYY') : ''}
+                                                    </p>
+                                                    {item.paymentMethod && (
+                                                        <span className={`flex items-center px-1.5 py-0.5 rounded-full text-xs font-semibold ${item.paymentMethod === 'Cash'
+                                                                ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
+                                                                : 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400'
+                                                            }`}>
+                                                            {item.paymentMethod === 'Cash' ? '💵 Cash' : '💳 Online'}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
                                             <p className={`font-bold shrink-0 self-end sm:self-auto ${isIncome ? 'text-light-income dark:text-dark-income' : 'text-light-expense dark:text-dark-expense'}`}>
                                                 {isIncome ? '+' : '-'}{currencyFormat(amount)}

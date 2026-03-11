@@ -16,6 +16,22 @@ export const GlobalProvider = ({ children }) => {
     const totalExpense = expenses.reduce((acc, expense) => acc + Number(expense.amount), 0);
     const totalBalance = totalIncome - totalExpense;
 
+    // Payment method breakdowns
+    const hardCashIncome = incomes
+        .filter(i => i.paymentMethod === 'Cash')
+        .reduce((acc, i) => acc + Number(i.amount), 0);
+    const onlineIncome = incomes
+        .filter(i => i.paymentMethod && i.paymentMethod !== 'Cash')
+        .reduce((acc, i) => acc + Number(i.amount), 0);
+    const hardCashExpense = expenses
+        .filter(e => e.paymentMethod === 'Cash')
+        .reduce((acc, e) => acc + Number(e.amount), 0);
+    const onlineExpense = expenses
+        .filter(e => e.paymentMethod && e.paymentMethod !== 'Cash')
+        .reduce((acc, e) => acc + Number(e.amount), 0);
+    const hardCashBalance = hardCashIncome - hardCashExpense;
+    const onlineBalance = onlineIncome - onlineExpense;
+
     const transactionHistory = () => {
         const history = [...incomes, ...expenses];
         history.sort((a, b) => {
@@ -135,6 +151,12 @@ export const GlobalProvider = ({ children }) => {
             totalIncome,
             totalExpense,
             totalBalance,
+            hardCashBalance,
+            onlineBalance,
+            hardCashIncome,
+            onlineIncome,
+            hardCashExpense,
+            onlineExpense,
             transactionHistory,
             error,
             setError,

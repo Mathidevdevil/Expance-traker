@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Download, Loader2 } from 'lucide-react';
-import api from '../utils/api';
+
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import GlassCard from '../components/GlassCard';
@@ -34,26 +34,41 @@ const Profile = () => {
     const handleDownload = async () => {
         setDownloading(true);
         try {
-            const response = await api.get('/reports/download', {
-                params: { month, year },
-                responseType: 'arraybuffer',
-                headers: {
-                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                }
-            });
+            // Get the JWT token from localStorage
+            const user = JSON.parse(localStorage.getItem('user'));
+            const token = user?.token;
+            if (!token) {
+                toast.error('Not authenticated. Please log in again.');
+                setDownloading(false);
+                return;
+            }
 
-            // Create download link — explicit MIME type is required for Android to open the file correctly
-            const blob = new Blob([response.data], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `Expense_Report_${year}_${month}.xlsx`);
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode.removeChild(link);
-            toast.success("Report downloaded successfully!");
+            // Build direct download URL with token as query param.
+            // This works in GoNative WebView (and all browsers) because it is a plain
+            // URL navigation — WebViews cannot handle blob: URLs so the old fetch+blob
+            // approach showed raw binary text on Android.
+            const baseURL = import.meta.env.PROD
+                ? 'https://expance-traker-backend.vercel.app/api'
+                : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api');
+
+            const downloadUrl =
+                `${baseURL}/reports/download?month=${month}&year=${year}&token=${encodeURIComponent(token)}`;
+
+            // On Android / GoNative WebView use window.open so the OS file handler picks it up.
+            // On desktop browsers use a hidden anchor click.
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid) {
+                window.open(downloadUrl, '_blank');
+            } else {
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.setAttribute('download', `Expense_Report_${year}_${String(month).padStart(2, '0')}.xlsx`);
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            }
+
+            toast.success('Report downloaded successfully!');
             setIsPreviewOpen(false);
         } catch (error) {
             console.error('Download failed:', error);
