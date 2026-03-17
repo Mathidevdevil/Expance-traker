@@ -108,6 +108,12 @@
 }
 
 @layer utilities {
+
+  /* iOS safe area support for bottom nav */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
   .glass {
     @apply rounded-[20px] transition-all duration-300;
     background-color: rgba(255, 255, 255, 0.7) !important;

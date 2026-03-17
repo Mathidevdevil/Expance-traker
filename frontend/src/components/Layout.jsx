@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
+import BottomNav from './BottomNav';
 import { Menu } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -45,15 +46,18 @@ const Layout = ({ children }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="flex-1 p-4 lg:p-8 overflow-x-hidden relative z-10"
+                    className="flex-1 p-4 lg:p-8 overflow-x-hidden relative z-10 pb-20 lg:pb-8"
                 >
                     {children}
                 </motion.main>
 
-                {/* Footer */}
-                <footer className="py-4 text-center text-sm text-light-textSecondary dark:text-dark-textSecondary relative z-10 mt-auto">
+                {/* Footer — hidden on mobile to give the bottom nav breathing room */}
+                <footer className="hidden lg:block py-4 text-center text-sm text-light-textSecondary dark:text-dark-textSecondary relative z-10 mt-auto">
                     &copy; 2026 Mathi | Built with ❤️ using React
                 </footer>
+
+                {/* Mobile bottom navigation */}
+                <BottomNav />
             </div>
         </div>
     );
