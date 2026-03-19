@@ -212,7 +212,7 @@ const Expenses = () => {
                                                     {expense.paymentMethod && (
                                                         <span className={`flex items-center whitespace-nowrap px-2 py-0.5 rounded-full text-xs font-semibold ${expense.paymentMethod === 'Cash' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400'}`}>
                                                             <CreditCard className="w-3 h-3 mr-1" />
-                                                            {expense.paymentMethod === 'Cash' ? 'Hard Cash' : 'Online Payment'}
+                                                            {expense.paymentMethod === 'Cash' ? 'Case' : 'Online Payment'}
                                                         </span>
                                                     )}
 

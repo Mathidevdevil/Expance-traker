@@ -64,7 +64,7 @@ const PaymentMethodChart = () => {
 
             return {
                 name: date,
-                'Hard Cash': cashAmount,
+                'Case': cashAmount,
                 'Online Payment': onlineAmount,
             };
         });
@@ -107,7 +107,7 @@ const PaymentMethodChart = () => {
                     />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: cursorColor }} />
                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar dataKey="Hard Cash" fill={cashColor} radius={[4, 4, 0, 0]} maxBarSize={40} animationDuration={1500} />
+                    <Bar dataKey="Case" fill={cashColor} radius={[4, 4, 0, 0]} maxBarSize={40} animationDuration={1500} />
                     <Bar dataKey="Online Payment" fill={onlineColor} radius={[4, 4, 0, 0]} maxBarSize={40} animationDuration={1500} />
                 </BarChart>
             </ResponsiveContainer>

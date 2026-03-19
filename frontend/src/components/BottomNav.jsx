@@ -1,172 +1,101 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, TrendingUp, TrendingDown, User } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useCallback } from 'react';
+import { LayoutDashboard, User, IndianRupee } from 'lucide-react';
+import { motion } from 'framer-motion';
 import clsx from 'clsx';
+import { useGlobalContext } from '../context/GlobalContext';
+import { currencyFormat } from '../utils/formatCurrency';
 
-const navItems = [
-    {
-        path: '/',
-        label: 'Dashboard',
-        icon: LayoutDashboard,
-        activeColor: '#6366F1',       // indigo
-        activeBg: 'rgba(99,102,241,0.12)',
-    },
-    {
-        path: '/incomes',
-        label: 'Incomes',
-        icon: TrendingUp,
-        activeColor: '#10B981',       // emerald
-        activeBg: 'rgba(16,185,129,0.12)',
-    },
-    {
-        path: '/expenses',
-        label: 'Expenses',
-        icon: TrendingDown,
-        activeColor: '#F43F5E',       // rose
-        activeBg: 'rgba(244,63,94,0.12)',
-    },
-    {
-        path: '/profile',
-        label: 'Profile',
-        icon: User,
-        activeColor: '#3B82F6',       // blue
-        activeBg: 'rgba(59,130,246,0.12)',
-    },
-];
-
-/* ---------- Ripple effect ---------- */
-const Ripple = ({ x, y }) => (
-    <motion.span
-        className="absolute rounded-full bg-current pointer-events-none"
-        style={{ left: x - 20, top: y - 20, width: 40, height: 40, opacity: 0.18 }}
-        initial={{ scale: 0, opacity: 0.25 }}
-        animate={{ scale: 3.5, opacity: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.55, ease: 'easeOut' }}
-    />
-);
-
-/* ---------- Single nav item ---------- */
-const NavItem = ({ item, isActive }) => {
-    const Icon = item.icon;
-    const [ripples, setRipples] = useState([]);
-
-    const addRipple = useCallback((e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const id = Date.now();
-        setRipples((prev) => [...prev, { id, x, y }]);
-        setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 650);
-    }, []);
-
-    return (
-        <Link
-            to={item.path}
-            aria-label={item.label}
-            aria-current={isActive ? 'page' : undefined}
-            className="relative flex flex-col items-center justify-center flex-1 h-full overflow-hidden select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-400"
-            onClick={addRipple}
-        >
-            {/* Ripple layer */}
-            <AnimatePresence>
-                {ripples.map((r) => (
-                    <Ripple key={r.id} x={r.x} y={r.y} />
-                ))}
-            </AnimatePresence>
-
-            {/* Active pill background */}
-            <AnimatePresence>
-                {isActive && (
-                    <motion.span
-                        layoutId="active-pill"
-                        className="absolute inset-x-2 inset-y-1.5 rounded-2xl"
-                        style={{ background: item.activeBg }}
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.85 }}
-                        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Icon */}
-            <motion.div
-                animate={isActive
-                    ? { y: -3, scale: 1.15 }
-                    : { y: 0, scale: 1 }
-                }
-                transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-                className="relative z-10"
-            >
-                <Icon
-                    className="w-5 h-5 transition-colors duration-200"
-                    style={{ color: isActive ? item.activeColor : undefined }}
-                    strokeWidth={isActive ? 2.5 : 1.8}
-                />
-            </motion.div>
-
-            {/* Label */}
-            <motion.span
-                animate={isActive
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0.55, y: 1 }
-                }
-                transition={{ duration: 0.2 }}
-                className="relative z-10 text-[10px] font-semibold mt-0.5 leading-none transition-colors duration-200"
-                style={{ color: isActive ? item.activeColor : undefined }}
-            >
-                {item.label}
-            </motion.span>
-
-            {/* Active dot */}
-            <AnimatePresence>
-                {isActive && (
-                    <motion.span
-                        className="absolute bottom-1.5 w-1 h-1 rounded-full"
-                        style={{ background: item.activeColor }}
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                    />
-                )}
-            </AnimatePresence>
-        </Link>
-    );
-};
-
-/* ---------- Bottom Navigation Bar ---------- */
+/* ---------- Bottom Navigation Bar (Floating Pill Design) ---------- */
 const BottomNav = () => {
     const location = useLocation();
     const isActive = (path) => location.pathname === path;
+    const { totalBalance, hardCashBalance, onlineBalance } = useGlobalContext();
 
     return (
-        <nav
-            role="navigation"
-            aria-label="Main mobile navigation"
-            className={clsx(
-                // Show only on mobile (< lg = 1024px), hide on desktop
-                'lg:hidden fixed bottom-0 left-0 right-0 z-50',
-                'h-[62px]',
-                // Glass morphism
-                'bg-white/80 dark:bg-black/80 backdrop-blur-xl',
-                'border-t border-white/60 dark:border-white/10',
-                'shadow-[0_-8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_-8px_32px_rgba(0,0,0,0.5)]',
-                // Safe area for iOS home indicator
-                'pb-safe',
-            )}
-        >
-            {/* Subtle top highlight line */}
-            <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/60 dark:via-white/10 to-transparent pointer-events-none" />
-
-            <div className="flex items-stretch h-full text-light-textSecondary dark:text-dark-textSecondary">
-                {navItems.map((item) => (
-                    <NavItem key={item.path} item={item} isActive={isActive(item.path)} />
-                ))}
+        <div className="lg:hidden fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center pointer-events-none gap-3 px-4 pb-safe">
+            
+            {/* Financial Totals Strip */}
+            <div className="pointer-events-auto w-full bg-white/90 dark:bg-[#1C1C1E]/90 backdrop-blur-3xl border border-black/5 dark:border-white/10 rounded-3xl px-5 py-3.5 flex justify-between items-center shadow-xl">
+                <div className="flex flex-col items-center flex-1">
+                    <span className="text-[10px] uppercase text-light-textSecondary dark:text-[#8E8E93] font-bold tracking-wider mb-0.5">Total</span>
+                    <span className="text-sm text-light-primary dark:text-dark-primary font-black flex items-center">
+                        <IndianRupee className="w-3.5 h-3.5 mr-0.5" />{currencyFormat(totalBalance || 0)}
+                    </span>
+                </div>
+                <div className="w-px h-7 bg-black/10 dark:bg-white/10" />
+                <div className="flex flex-col items-center flex-1">
+                    <span className="text-[10px] uppercase text-amber-600 dark:text-amber-500 font-bold tracking-wider mb-0.5">Case</span>
+                    <span className="text-sm text-amber-600 dark:text-amber-400 font-black flex items-center">
+                        <IndianRupee className="w-3.5 h-3.5 mr-0.5" />{currencyFormat(hardCashBalance || 0)}
+                    </span>
+                </div>
+                <div className="w-px h-7 bg-black/10 dark:bg-white/10" />
+                <div className="flex flex-col items-center flex-1">
+                    <span className="text-[10px] uppercase text-violet-600 dark:text-violet-500 font-bold tracking-wider mb-0.5">Online</span>
+                    <span className="text-sm text-violet-600 dark:text-violet-400 font-black flex items-center">
+                        <IndianRupee className="w-3.5 h-3.5 mr-0.5" />{currencyFormat(onlineBalance || 0)}
+                    </span>
+                </div>
             </div>
-        </nav>
+
+            {/* Segmented Floating Nav */}
+            <div className="pointer-events-auto w-full flex justify-between items-center gap-3 h-[60px]">
+                {/* Left Circle: Dashboard */}
+                <Link
+                    to="/"
+                    className={clsx(
+                        "w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-3xl shadow-xl transition-all border border-black/5 dark:border-white/10",
+                        isActive('/') 
+                            ? "bg-light-primary dark:bg-dark-primary text-white dark:text-black" 
+                            : "bg-white/90 dark:bg-[#1C1C1E]/90 text-light-textSecondary dark:text-[#8E8E93] hover:text-light-textPrimary dark:hover:text-white"
+                    )}
+                >
+                    <LayoutDashboard className="w-6 h-6" />
+                </Link>
+
+                {/* Middle Pill: Incomes & Expenses */}
+                <div className="flex-1 h-full bg-white/90 dark:bg-[#1C1C1E]/90 backdrop-blur-3xl rounded-full shadow-xl p-1.5 flex items-center relative border border-black/5 dark:border-white/10">
+                     <Link to="/incomes" className="flex-1 h-full relative flex items-center justify-center z-10 w-full rounded-full">
+                        {isActive('/incomes') && (
+                            <motion.div 
+                                layoutId="nav-pill" 
+                                className="absolute inset-0 bg-black/5 dark:bg-[#3A3A3C] rounded-full shadow-sm border border-black/5 dark:border-white/5" 
+                                transition={{ type: 'spring', stiffness: 400, damping: 30 }} 
+                            />
+                        )}
+                        <span className={clsx("relative z-20 text-[15px] font-bold transition-colors", isActive('/incomes') ? "text-light-textPrimary dark:text-white" : "text-light-textSecondary dark:text-[#8E8E93]")}>
+                            Incomes
+                        </span>
+                     </Link>
+                     <Link to="/expenses" className="flex-1 h-full relative flex items-center justify-center z-10 w-full rounded-full">
+                        {isActive('/expenses') && (
+                            <motion.div 
+                                layoutId="nav-pill" 
+                                className="absolute inset-0 bg-black/5 dark:bg-[#3A3A3C] rounded-full shadow-sm border border-black/5 dark:border-white/5" 
+                                transition={{ type: 'spring', stiffness: 400, damping: 30 }} 
+                            />
+                        )}
+                        <span className={clsx("relative z-20 text-[15px] font-bold transition-colors", isActive('/expenses') ? "text-light-textPrimary dark:text-white" : "text-light-textSecondary dark:text-[#8E8E93]")}>
+                            Expenses
+                        </span>
+                     </Link>
+                </div>
+
+                {/* Right Circle: Profile */}
+                <Link
+                    to="/profile"
+                    className={clsx(
+                         "w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-3xl shadow-xl transition-all border border-black/5 dark:border-white/10",
+                        isActive('/profile') 
+                            ? "bg-light-primary dark:bg-dark-primary text-white dark:text-black" 
+                            : "bg-white/90 dark:bg-[#1C1C1E]/90 text-light-textSecondary dark:text-[#8E8E93] hover:text-light-textPrimary dark:hover:text-white"
+                    )}
+                >
+                    <User className="w-6 h-6" />
+                </Link>
+            </div>
+            
+        </div>
     );
 };
 

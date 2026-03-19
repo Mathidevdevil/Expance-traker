@@ -118,7 +118,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                                         required
                                     >
                                         <option value="" disabled>Select Payment Method</option>
-                                        <option value="Cash">💵 Hard Cash</option>
+                                        <option value="Cash">💵 Case</option>
                                         <option value="UPI (GPay, PhonePay)">📱 UPI (GPay, PhonePay)</option>
                                         <option value="Netbanking">🏦 Net Banking / Card</option>
                                     </select>

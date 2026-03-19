@@ -173,7 +173,7 @@ const Dashboard = () => {
                 </AnimatedButton>
             </div>
 
-            {/* Stats Grid — 5 cards: Balance · Income · Expense · Hard Cash · Online */}
+            {/* Stats Grid — 3 cards: Balance · Case · Online */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Total Balance */}
                 <GlassCard className="flex flex-col relative overflow-hidden group sm:col-span-2 lg:col-span-1">
@@ -182,7 +182,7 @@ const Dashboard = () => {
                             <div className="w-12 h-12 rounded-full bg-light-primary/10 dark:bg-dark-primary/20 flex items-center justify-center text-light-primary dark:text-dark-primary border border-light-primary/20 dark:border-dark-primary/30">
                                 <IndianRupee className="w-6 h-6" />
                             </div>
-                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Total Balance</h2>
+                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Total balance</h2>
                         </div>
                         <div className={balanceTrend.isPositive ? "text-green-500 font-bold text-sm bg-green-500/10 px-2 py-1 rounded-full flex items-center" : "text-red-500 font-bold text-sm bg-red-500/10 px-2 py-1 rounded-full flex items-center"}>
                             {balanceTrend.isPositive ? '↑' : '↓'} {balanceTrend.value}%
@@ -193,59 +193,23 @@ const Dashboard = () => {
                     </p>
                 </GlassCard>
 
-                {/* Total Income */}
-                <GlassCard className="flex flex-col relative overflow-hidden group">
-                    <div className="flex items-center gap-4 mb-4 relative z-10 w-full justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-light-income/10 dark:bg-dark-income/20 flex items-center justify-center text-light-income dark:text-dark-income border border-light-income/20 dark:border-dark-income/30">
-                                <TrendingUp className="w-6 h-6" />
-                            </div>
-                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Total Income</h2>
-                        </div>
-                        <div className={incomeTrend.isPositive ? "text-green-500 font-bold text-sm bg-green-500/10 px-2 py-1 rounded-full flex items-center" : "text-red-500 font-bold text-sm bg-red-500/10 px-2 py-1 rounded-full flex items-center"}>
-                            {incomeTrend.isPositive ? '↑' : '↓'} {incomeTrend.value}%
-                        </div>
-                    </div>
-                    <p className="text-3xl lg:text-4xl font-black text-light-income dark:text-dark-income relative z-10">
-                        ₹<AnimatedCounter value={totalIncome || 0} />
-                    </p>
-                </GlassCard>
-
-                {/* Total Expense */}
-                <GlassCard className="flex flex-col relative overflow-hidden group">
-                    <div className="flex items-center gap-4 mb-4 relative z-10 w-full justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-light-expense/10 dark:bg-dark-expense/20 flex items-center justify-center text-light-expense dark:text-dark-expense border border-light-expense/20 dark:border-dark-expense/30">
-                                <TrendingDown className="w-6 h-6" />
-                            </div>
-                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Total Expense</h2>
-                        </div>
-                        <div className={expenseTrend.isPositive ? "text-green-500 font-bold text-sm bg-green-500/10 px-2 py-1 rounded-full flex items-center" : "text-red-500 font-bold text-sm bg-red-500/10 px-2 py-1 rounded-full flex items-center"}>
-                            {expenseTrend.isPositive ? '↑' : '↓'} {expenseTrend.value}%
-                        </div>
-                    </div>
-                    <p className="text-3xl lg:text-4xl font-black text-light-expense dark:text-dark-expense relative z-10">
-                        ₹<AnimatedCounter value={totalExpense || 0} />
-                    </p>
-                </GlassCard>
-
-                {/* Hard Cash Balance */}
+                {/* Case Balance */}
                 <GlassCard className="flex flex-col relative overflow-hidden group">
                     <div className="flex items-center gap-4 mb-4 relative z-10 w-full justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-amber-500/10 dark:bg-amber-400/20 flex items-center justify-center text-amber-600 dark:text-amber-400 border border-amber-500/20 dark:border-amber-400/30">
                                 <Banknote className="w-6 h-6" />
                             </div>
-                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Hard Cash</h2>
+                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Total case balance</h2>
                         </div>
                         <span className="text-xs font-semibold px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
-                            💵 Cash
+                            💵 Case
                         </span>
                     </div>
                     <p className="text-3xl lg:text-4xl font-black text-amber-600 dark:text-amber-400 relative z-10">
                         ₹<AnimatedCounter value={hardCashBalance || 0} />
                     </p>
-                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mt-1">Net cash balance</p>
+                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary mt-1">Net case balance</p>
                 </GlassCard>
 
                 {/* Online Balance */}
@@ -255,7 +219,7 @@ const Dashboard = () => {
                             <div className="w-12 h-12 rounded-full bg-violet-500/10 dark:bg-violet-400/20 flex items-center justify-center text-violet-600 dark:text-violet-400 border border-violet-500/20 dark:border-violet-400/30">
                                 <CreditCard className="w-6 h-6" />
                             </div>
-                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Online</h2>
+                            <h2 className="text-lg font-bold text-light-textPrimary dark:text-dark-textPrimary">Total online balance</h2>
                         </div>
                         <span className="text-xs font-semibold px-2 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400">
                             💳 UPI / Net
@@ -292,7 +256,7 @@ const Dashboard = () => {
                                         : 'text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary'
                                     }`}
                             >
-                                💳 Cash vs Online
+                                💳 Case vs Online
                             </button>
                         </div>
                     </div>
@@ -343,7 +307,7 @@ const Dashboard = () => {
                                                                 ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
                                                                 : 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400'
                                                             }`}>
-                                                            {item.paymentMethod === 'Cash' ? '💵 Cash' : '💳 Online'}
+                                                            {item.paymentMethod === 'Cash' ? '💵 Case' : '💳 Online'}
                                                         </span>
                                                     )}
                                                 </div>
