@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import Chart from '../components/Chart';
 import CategoryChart from '../components/CategoryChart';
 import PaymentMethodChart from '../components/PaymentMethodChart';
-import { Wallet, TrendingUp, TrendingDown, IndianRupee, History, Plus, Banknote, CreditCard } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, IndianRupee, History, Plus, Banknote, CreditCard, ChevronDown } from 'lucide-react';
 import { currencyFormat } from '../utils/formatCurrency';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -111,7 +111,7 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-6">
-            <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <header className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <motion.h1
                         initial={{ opacity: 0, x: -20 }}
@@ -134,16 +134,18 @@ const Dashboard = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
+                    className="relative inline-block"
                 >
                     <select
                         value={timeFilter}
                         onChange={(e) => setTimeFilter(e.target.value)}
-                        className="glass px-4 py-2 bg-white/50 dark:bg-black/50 border-white/50 dark:border-white/10 rounded-xl text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-[#3B82F6] cursor-pointer shadow-sm text-sm font-semibold"
+                        className="glass appearance-none pl-4 pr-10 py-2 bg-white/50 dark:bg-black/50 border-white/50 dark:border-white/10 rounded-xl text-light-textPrimary dark:text-dark-textPrimary focus:outline-none focus:ring-2 focus:ring-[#3B82F6] cursor-pointer shadow-sm text-sm font-semibold transition-all min-w-[130px]"
                     >
                         <option value="all">All Time</option>
                         <option value="month">This Month</option>
                         <option value="week">This Week</option>
                     </select>
+                    <ChevronDown className="w-4 h-4 text-light-textSecondary dark:text-dark-textSecondary absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </motion.div>
             </header>
 
@@ -319,7 +321,19 @@ const Dashboard = () => {
                                     );
                                 })
                             ) : (
-                                <p className="text-light-textSecondary dark:text-dark-textSecondary text-sm text-center py-4">No recent history.</p>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="text-center py-10 flex flex-col items-center justify-center opacity-80"
+                                >
+                                    <div className="w-12 h-12 bg-light-primary/10 dark:bg-dark-primary/10 rounded-full flex flex-col items-center justify-center mb-3 text-light-primary dark:text-dark-primary">
+                                        <History className="w-6 h-6 opacity-60" />
+                                    </div>
+                                    <h4 className="text-sm font-bold text-light-textPrimary dark:text-dark-textPrimary mb-1">No recent history</h4>
+                                    <p className="text-xs text-light-textSecondary dark:text-dark-textSecondary px-4">
+                                        Transactions will appear here once you add them.
+                                    </p>
+                                </motion.div>
                             )}
                         </div>
                     </GlassCard>

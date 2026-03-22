@@ -143,7 +143,7 @@ const Incomes = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
-                    <GlassCard className="!p-4 !w-auto !rounded-xl text-center min-w-[200px]">
+                    <GlassCard className="!p-4 w-full sm:w-auto !rounded-xl text-center min-w-[200px]">
                         <h2 className="text-sm font-medium text-light-income dark:text-dark-income uppercase tracking-wider mb-1">Total Income</h2>
                         <p className="text-2xl font-black text-light-textPrimary dark:text-dark-textPrimary">
                             ₹<AnimatedCounter value={totalIncome || 0} />

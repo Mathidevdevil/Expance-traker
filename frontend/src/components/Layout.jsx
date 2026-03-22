@@ -26,8 +26,9 @@ const Layout = ({ children }) => {
                 <header className="glass rounded-none border-x-0 border-t-0 h-20 flex items-center justify-between px-6 sticky top-0 z-30">
                     <div className="flex items-center">
                         <button
+                            aria-label="Open sidebar"
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-primary dark:hover:text-dark-primary p-2 -ml-2 rounded-md transition-colors flex-shrink-0"
+                            className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-primary dark:hover:text-dark-primary p-2 -ml-2 rounded-md transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary flex-shrink-0"
                         >
                             <Menu className="w-6 h-6" />
                         </button>

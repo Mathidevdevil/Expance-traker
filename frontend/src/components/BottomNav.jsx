@@ -43,8 +43,9 @@ const BottomNav = () => {
                 {/* Left Circle: Dashboard */}
                 <Link
                     to="/"
+                    aria-label="Dashboard"
                     className={clsx(
-                        "w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-3xl shadow-xl transition-all border border-black/5 dark:border-white/10",
+                        "w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-3xl shadow-xl transition-all border border-black/5 dark:border-white/10 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black",
                         isActive('/') 
                             ? "bg-light-primary dark:bg-dark-primary text-white dark:text-black" 
                             : "bg-white/90 dark:bg-[#1C1C1E]/90 text-light-textSecondary dark:text-[#8E8E93] hover:text-light-textPrimary dark:hover:text-white"
@@ -55,7 +56,7 @@ const BottomNav = () => {
 
                 {/* Middle Pill: Incomes & Expenses */}
                 <div className="flex-1 h-full bg-white/90 dark:bg-[#1C1C1E]/90 backdrop-blur-3xl rounded-full shadow-xl p-1.5 flex items-center relative border border-black/5 dark:border-white/10">
-                     <Link to="/incomes" className="flex-1 h-full relative flex items-center justify-center z-10 w-full rounded-full">
+                     <Link to="/incomes" aria-label="Incomes" className="flex-1 h-full relative flex items-center justify-center z-10 w-full rounded-full active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary">
                         {isActive('/incomes') && (
                             <motion.div 
                                 layoutId="nav-pill" 
@@ -67,7 +68,7 @@ const BottomNav = () => {
                             Incomes
                         </span>
                      </Link>
-                     <Link to="/expenses" className="flex-1 h-full relative flex items-center justify-center z-10 w-full rounded-full">
+                     <Link to="/expenses" aria-label="Expenses" className="flex-1 h-full relative flex items-center justify-center z-10 w-full rounded-full active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary">
                         {isActive('/expenses') && (
                             <motion.div 
                                 layoutId="nav-pill" 
@@ -84,8 +85,9 @@ const BottomNav = () => {
                 {/* Right Circle: Profile */}
                 <Link
                     to="/profile"
+                    aria-label="Profile"
                     className={clsx(
-                         "w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-3xl shadow-xl transition-all border border-black/5 dark:border-white/10",
+                         "w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-3xl shadow-xl transition-all border border-black/5 dark:border-white/10 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black",
                         isActive('/profile') 
                             ? "bg-light-primary dark:bg-dark-primary text-white dark:text-black" 
                             : "bg-white/90 dark:bg-[#1C1C1E]/90 text-light-textSecondary dark:text-[#8E8E93] hover:text-light-textPrimary dark:hover:text-white"

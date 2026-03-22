@@ -30,7 +30,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                                 whileHover={{ scale: 1.15, rotate: 90 }}
                                 whileTap={{ scale: 0.9 }}
                                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                className="absolute top-4 right-4 p-2 text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors"
+                                className="absolute top-4 right-4 p-2 text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary"
                             >
                                 <X className="w-5 h-5" />
                             </motion.button>
@@ -153,7 +153,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, type, inputState, handleI
                                     whileTap={!isLoading ? { scale: 0.97, y: 0 } : {}}
                                     transition={{ type: "spring", stiffness: 400, damping: 20 }}
                                     disabled={isLoading}
-                                    className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-lg flex items-center justify-center transition-all relative overflow-hidden
+                                    className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-lg flex items-center justify-center transition-all relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black focus-visible:ring-light-primary
                                         ${type === 'income'
                                             ? 'bg-light-income dark:bg-dark-income hover:shadow-[0_8px_25px_rgba(16,185,129,0.45)] hover:brightness-110'
                                             : 'bg-light-expense dark:bg-dark-expense hover:shadow-[0_8px_25px_rgba(244,63,94,0.45)] hover:brightness-110'

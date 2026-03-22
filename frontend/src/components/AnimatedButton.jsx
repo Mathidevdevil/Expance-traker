@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 const AnimatedButton = ({ children, className, onClick, type = "button", variant = "primary", disabled = false, ...props }) => {
 
-    const baseClasses = "rounded-full font-bold px-6 py-3 tracking-wider flex items-center justify-center transition-all duration-300 shadow-lg relative overflow-hidden";
+    const baseClasses = "rounded-full font-bold px-6 py-3 tracking-wider flex items-center justify-center transition-all duration-300 shadow-lg relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black";
 
     const variants = {
         primary: "bg-light-primary dark:bg-dark-primary text-white border border-light-primary/50 dark:border-dark-primary/50 shadow-md hover:shadow-[0_8px_25px_rgba(59,130,246,0.45)] hover:brightness-110",

@@ -50,11 +50,12 @@ const Sidebar = ({ isOpen, onClose }) => {
                         ExpenseTracker
                     </h1>
                     <motion.button
+                        aria-label="Close sidebar"
                         onClick={onClose}
                         whileHover={{ scale: 1.15, rotate: 90 }}
                         whileTap={{ scale: 0.9 }}
                         transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                        className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 p-1.5 rounded-full transition-colors absolute right-4"
+                        className="lg:hidden text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:bg-black/10 dark:hover:bg-white/10 p-1.5 rounded-full transition-colors absolute right-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary"
                     >
                         <X className="w-6 h-6" />
                     </motion.button>
@@ -81,7 +82,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                     <Link
                                         to={item.path}
                                         className={clsx(
-                                            'flex items-center px-4 py-3.5 text-sm font-medium rounded-xl transition-all duration-200',
+                                            'flex items-center px-4 py-3.5 text-sm font-medium rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1C1C1E]',
                                             isActive(item.path)
                                                 ? 'bg-light-primary/10 dark:bg-dark-primary/10 text-light-primary dark:text-dark-primary font-bold shadow-sm'
                                                 : 'text-light-textSecondary dark:text-dark-textSecondary hover:bg-black/5 dark:hover:bg-white/5 border border-transparent hover:border-white/20 dark:hover:border-white/10 hover:text-light-textPrimary dark:hover:text-dark-textPrimary hover:shadow-sm'
@@ -102,7 +103,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setIsLogoutConfirmOpen(true)}
-                        className="flex items-center px-4 py-3.5 text-sm font-medium text-light-expense dark:text-dark-expense rounded-xl hover:text-red-600 dark:hover:text-red-400 transition-colors mt-auto border border-transparent hover:border-light-expense/30 dark:hover:border-dark-expense/30"
+                        className="flex items-center px-4 py-3.5 text-sm font-medium text-light-expense dark:text-dark-expense rounded-xl hover:text-red-600 dark:hover:text-red-400 transition-colors mt-auto border border-transparent hover:border-light-expense/30 dark:hover:border-dark-expense/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-expense"
                     >
                         <LogOut className="w-5 h-5 mr-3 shrink-0" />
                         Sign Out

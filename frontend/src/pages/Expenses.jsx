@@ -141,7 +141,7 @@ const Expenses = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
-                    <GlassCard className="!p-4 !w-auto !rounded-xl text-center min-w-[200px]">
+                    <GlassCard className="!p-4 w-full sm:w-auto !rounded-xl text-center min-w-[200px]">
                         <h2 className="text-sm font-medium text-light-expense dark:text-dark-expense uppercase tracking-wider mb-1">Total Expense</h2>
                         <p className="text-2xl font-black text-light-textPrimary dark:text-dark-textPrimary">
                             ₹<AnimatedCounter value={totalExpense || 0} />
