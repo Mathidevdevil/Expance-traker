@@ -9,25 +9,25 @@ export default {
 		extend: {
 			colors: {
 				light: {
-					bg: '#F8FAFC',
-					primary: '#2563EB',
-					accent: '#06B6D4',
+					bg: '#FFF3E2',
+					primary: '#FBAB57',
+					accent: '#FEC674',
 					income: '#16A34A',
 					expense: '#DC2626',
 					card: '#FFFFFF',
-					border: '#E2E8F0',
-					textPrimary: '#1E293B',
+					border: '#FEC674',
+					textPrimary: '#222222',
 					textSecondary: '#64748B'
 				},
 				dark: {
-					bg: '#000000',
-					primary: '#3B82F6',
-					accent: '#22D3EE',
+					bg: '#222222',
+					primary: '#FBAB57',
+					accent: '#FEC674',
 					income: '#22C55E',
 					expense: '#EF4444',
-					card: '#0a0a0a',
-					border: '#222222',
-					textPrimary: '#F1F5F9',
+					card: '#2A2A2A',
+					border: '#444444',
+					textPrimary: '#FFF3E2',
 					textSecondary: '#A3A3A3'
 				},
 				background: 'hsl(var(--background))',
